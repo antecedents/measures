@@ -24,19 +24,19 @@ class Structuring:
         return decompositions
 
     @staticmethod
-    def __get_variables(struct: stl.DecomposeResult):
+    def __get_variables(parts: stl.DecomposeResult):
 
         decompositions = pd.DataFrame(
-            data={'observation': struct.observed.values, 'trend': struct.trend.values, 'seasonal': struct.seasonal.values,
-                  'residue': struct.resid.values, 'weight': struct.weights.values}, index=struct.observed.index)
+            data={'observation': parts.observed.values, 'trend': parts.trend.values, 'seasonal': parts.seasonal.values,
+                  'residue': parts.resid.values, 'weight': parts.weights.values}, index=parts.observed.index)
         decompositions.reset_index(inplace=True)
         decompositions.sort_values(by='week_ending_date', inplace=True)
 
         return decompositions
 
-    def exc(self, struct: stl.DecomposeResult):
+    def exc(self, parts: stl.DecomposeResult):
 
-        data = self.__get_variables(struct=struct)
+        data = self.__get_variables(parts=parts)
         data = self.__epoch(blob=data)
 
         return data
