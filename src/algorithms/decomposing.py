@@ -21,7 +21,7 @@ class Decomposing:
         self.__configurations = config.Config()
 
     @dask.delayed
-    def __slice(self, code: str) -> pd.DataFrame:
+    def __get_data(self, code: str) -> pd.DataFrame:
 
         return self.__data.copy()[self.__data['hospital_code'] == code, :]
 
@@ -37,5 +37,11 @@ class Decomposing:
 
         codes: np.ndarray = self.__data['hospital_code'].unique()
 
+        computations = []
         for code in codes:
             logging.info(code)
+
+            data = self.__get_data(code=code)
+            parts = self.__decompose(blob=data)
+
+
