@@ -22,7 +22,7 @@ class Config:
         """
 
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
-        self.decompositions_ = os.path.join(self.warehouse, 'series', 'decompositions')
+        self.decomposition_ = os.path.join(self.warehouse, 'series', 'decomposition')
 
         # Seed
         self.seed = 5
