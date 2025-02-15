@@ -42,7 +42,7 @@ class Persist:
 
         return nodes
 
-    def exc(self, data: pd.DataFrame, health_board_code: str, hospital_code: str):
+    def exc(self, data: pd.DataFrame, health_board_code: str, hospital_code: str) -> str:
         """
 
         :param data: The decomposition data.
@@ -57,4 +57,5 @@ class Persist:
 
         message = self.__objects.write(
             nodes=nodes, path=os.path.join(self.__configurations.decompositions_, f'{hospital_code}.json'))
-        self.__logger.info(message)
+
+        return message
