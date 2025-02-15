@@ -11,6 +11,10 @@ import config
 class Decomposing:
 
     def __init__(self, data: pd.DataFrame):
+        """
+
+        :param data: The index is a DatetimeIndex, which is necessary for the decomposition algorithm
+        """
 
         self.__data = data
 
@@ -22,10 +26,12 @@ class Decomposing:
         return self.__data.copy()[self.__data['hospital_code'] == code, :]
 
     @dask.delayed
-    def __decompose(self, blob: pd.DataFrame):
+    def __decompose(self, blob: pd.DataFrame) -> stl.DecomposeResult:
 
         parts = stl.seasonal_decompose(
             x=blob['n_attendances'], model='additive', period=self.__configurations.seasons)
+
+        return parts
 
     def exc(self):
 
