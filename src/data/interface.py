@@ -65,8 +65,9 @@ class Interface:
 
         # Reading
         data = self.__get_data(uri=uri)
-        self.__logger.info(data.head())
 
+        # Index
+        data.set_index(keys='week_ending_date', drop=True, inplace=True)
 
         # Return
         return data
