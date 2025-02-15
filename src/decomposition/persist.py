@@ -56,6 +56,6 @@ class Persist:
         nodes['hospital_code'] = hospital_code
 
         message = self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__configurations.decompositions_, f'{hospital_code}.json'))
+            nodes=nodes, path=os.path.join(self.__configurations.decomposition_, f'{hospital_code}.json'))
 
         return message
