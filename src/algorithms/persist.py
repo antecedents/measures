@@ -1,3 +1,4 @@
+"""Module persist.py"""
 import logging
 import os
 import pandas as pd
