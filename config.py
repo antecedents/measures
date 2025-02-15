@@ -17,11 +17,12 @@ class Config:
         Notes<br>
         -------<br>
 
-        <a href="https://otexts.com/fpp2/stationarity.html">Stationarity</a>
+        <a href="https://otexts.com/fpp2/stationarity.html">Stationarity</a><br>
+        Upcoming: Drift
         """
 
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
-        self.decompositions_ = os.path.join(self.warehouse, 'decompositions')
+        self.decompositions_ = os.path.join(self.warehouse, 'series', 'decompositions')
 
         # Seed
         self.seed = 5
