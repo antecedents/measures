@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import statsmodels.tsa.seasonal as stl
 
 
@@ -6,6 +7,14 @@ class Drawing:
 
     def __init__(self):
         pass
+
+    def __epoch(self, blob: pd.DataFrame):
+
+        decompositions = blob.copy()
+
+        decompositions['epoch']  = (
+                decompositions['week_ending_date'].to_numpy().astype(np.int64) / (10 ** 6)
+        ).astype(np.longlong)
 
     @staticmethod
     def __frame(struct: stl.DecomposeResult):
