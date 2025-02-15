@@ -1,5 +1,6 @@
 import pandas as pd
 
+import config
 import src.functions.objects
 
 
@@ -9,6 +10,9 @@ class Persist:
         """
         Constructor
         """
+
+        self.__configurations = config.Config()
+        self.__objects = src.functions.objects.Objects()
 
         self.__fields = ['milliseconds', 'observation', 'trend', 'seasonal', 'residue', 'weight']
 
@@ -35,3 +39,5 @@ class Persist:
         nodes: dict = self.__get_instances(blob=data)
         nodes['health_board_code'] = health_board_code
         nodes['hospital_code'] = hospital_code
+
+
