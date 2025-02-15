@@ -7,6 +7,7 @@ import statsmodels.tsa.seasonal as stl
 
 import config
 import src.decomposition.structuring
+import src.decomposition.persist
 
 
 class Decomposing:
@@ -21,6 +22,7 @@ class Decomposing:
 
         self.__configurations = config.Config()
         self.__structuring = src.decomposition.structuring.Structuring()
+        self.__persist = src.decomposition.persist.Persist()
 
     @dask.delayed
     def __get_data(self, code: str) -> pd.DataFrame:
@@ -39,6 +41,11 @@ class Decomposing:
     def __exc_structuring(self, parts: stl.DecomposeResult) -> pd.DataFrame:
 
         return self.__structuring.exc(parts=parts)
+
+    def __exc__persist(self, data: pd.DataFrame, health_board_code: str, hospital_code: str):
+
+        return self.__persist.exc(
+            data=data, health_board_code=health_board_code, hospital_code=hospital_code)
 
     def exc(self):
 
