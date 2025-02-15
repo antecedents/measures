@@ -1,13 +1,12 @@
 import logging
 
 import dask
-import numpy as np
 import pandas as pd
 import statsmodels.tsa.seasonal as stl
 
 import config
-import src.decomposition.structuring
 import src.decomposition.persist
+import src.decomposition.structuring
 
 
 class Decomposing:
@@ -20,6 +19,7 @@ class Decomposing:
 
         self.__data = data
 
+        # Instances
         self.__configurations = config.Config()
         self.__structuring = src.decomposition.structuring.Structuring()
         self.__persist = src.decomposition.persist.Persist()
@@ -42,6 +42,7 @@ class Decomposing:
 
         return self.__structuring.exc(parts=parts)
 
+    @dask.delayed
     def __exc__persist(self, data: pd.DataFrame, health_board_code: str, hospital_code: str):
 
         return self.__persist.exc(
@@ -49,12 +50,17 @@ class Decomposing:
 
     def exc(self):
 
-        codes: np.ndarray = self.__data['hospital_code'].unique()
+        doublet = self.__data[['health_board_code', 'hospital_code']].drop_duplicates()
 
         computations = []
-        for code in codes:
-            logging.info(code)
+        for i in range(doublet.shape[0]):
 
-            frame = self.__get_data(code=code)
+            frame = self.__get_data(code=doublet.hospital_code.iloc[i])
             parts = self.__decompose(frame=frame)
             data = self.__exc_structuring(parts=parts)
+            message = self.__exc__persist(
+                data=data, health_board_code=doublet.health_board_code.iloc[i], hospital_code=doublet.hospital_code.iloc[i])
+            computations.append(message)
+
+        calculations = dask.compute(computations, scheduler='threads')[0]
+        logging.info(calculations)
