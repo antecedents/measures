@@ -1,11 +1,12 @@
 import logging
-import pandas as pd
-import numpy as np
-import dask
 
+import dask
+import numpy as np
+import pandas as pd
 import statsmodels.tsa.seasonal as stl
 
 import config
+
 
 class Decomposing:
 
