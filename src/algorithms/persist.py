@@ -7,6 +7,12 @@ import src.functions.objects
 
 
 class Persist:
+    """
+    Notes<br>
+    ------<br>
+    
+    Saves an institution's attendance series decompositions in a stocks graphs format.
+    """
 
     def __init__(self):
         """
@@ -24,7 +30,7 @@ class Persist:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
-    def __get_instances(self, blob: pd.DataFrame) -> dict:
+    def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
 
         :param blob:
@@ -44,7 +50,7 @@ class Persist:
         :return:
         """
 
-        nodes: dict = self.__get_instances(blob=data)
+        nodes: dict = self.__get_nodes(blob=data)
         nodes['health_board_code'] = health_board_code
         nodes['hospital_code'] = hospital_code
 
