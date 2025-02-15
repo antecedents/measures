@@ -8,7 +8,13 @@ class Drawing:
     def __init__(self):
         pass
 
-    def __epoch(self, blob: pd.DataFrame):
+    @staticmethod
+    def __epoch(blob: pd.DataFrame):
+        """
+        
+        :param blob:
+        :return:
+        """
 
         decompositions = blob.copy()
 
