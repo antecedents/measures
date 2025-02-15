@@ -1,5 +1,7 @@
 import pandas as pd
 
+import src.functions.objects
+
 
 class Persist:
 
@@ -17,9 +19,9 @@ class Persist:
         :return:
         """
 
-        instances = blob[self.__fields].to_dict(orient='split')
+        nodes = blob[self.__fields].to_dict(orient='split')
 
-        return instances
+        return nodes
 
     def exc(self, data: pd.DataFrame, health_board_code: str, hospital_code):
         """
@@ -30,6 +32,6 @@ class Persist:
         :return:
         """
 
-        instances: dict = self.__get_instances(blob=data)
-        instances['health_board_code'] = health_board_code
-        instances['hospital_code'] = hospital_code
+        nodes: dict = self.__get_instances(blob=data)
+        nodes['health_board_code'] = health_board_code
+        nodes['hospital_code'] = hospital_code
