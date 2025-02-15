@@ -7,7 +7,7 @@ import statsmodels.tsa.seasonal as stl
 
 import config
 
-class Decompose:
+class Decomposing:
 
     def __init__(self, data: pd.DataFrame):
 
