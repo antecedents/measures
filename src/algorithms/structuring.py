@@ -17,7 +17,7 @@ class Structuring:
         """
 
         decompositions = blob.copy()
-        decompositions['epoch']  = (
+        decompositions['milliseconds']  = (
                 decompositions['week_ending_date'].to_numpy().astype(np.int64) / (10 ** 6)
         ).astype(np.longlong)
 
