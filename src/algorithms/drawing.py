@@ -2,7 +2,7 @@ import pandas as pd
 import statsmodels.tsa.seasonal as stl
 
 
-class Graphing:
+class Drawing:
 
     def __init__(self):
         pass
