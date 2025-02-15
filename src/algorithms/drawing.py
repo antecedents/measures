@@ -11,7 +11,7 @@ class Drawing:
     @staticmethod
     def __epoch(blob: pd.DataFrame):
         """
-        
+
         :param blob:
         :return:
         """
@@ -35,6 +35,7 @@ class Drawing:
 
     def exc(self, struct: stl.DecomposeResult):
 
-        self.__frame(struct=struct)
+        data = self.__frame(struct=struct)
+        data = self.__epoch(blob=data)
 
 
