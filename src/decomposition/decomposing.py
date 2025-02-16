@@ -26,12 +26,22 @@ class Decomposing:
 
     @dask.delayed
     def __get_data(self, code: str) -> pd.DataFrame:
+        """
+
+        :param code:
+        :return:
+        """
 
         data: pd.DataFrame = self.__data.copy().loc[self.__data['hospital_code'] == code, :]
         return data.sort_values(by='week_ending_date', ascending=True)
 
     @dask.delayed
     def __decompose(self, frame: pd.DataFrame) -> stl.DecomposeResult:
+        """
+
+        :param frame:
+        :return:
+        """
 
         parts = stl.seasonal_decompose(
             x=frame['n_attendances'], model='additive', period=self.__configurations.seasons)
@@ -40,22 +50,37 @@ class Decomposing:
 
     @dask.delayed
     def __exc_structuring(self, parts: stl.DecomposeResult) -> pd.DataFrame:
+        """
+
+        :param parts:
+        :return:
+        """
 
         return self.__structuring.exc(parts=parts)
 
     @dask.delayed
     def __exc__persist(self, data: pd.DataFrame, health_board_code: str, hospital_code: str):
+        """
+
+        :param data:
+        :param health_board_code:
+        :param hospital_code:
+        :return:
+        """
 
         return self.__persist.exc(
             data=data, health_board_code=health_board_code, hospital_code=hospital_code)
 
     def exc(self):
+        """
+
+        :return:
+        """
 
         doublet = self.__data[['health_board_code', 'hospital_code']].drop_duplicates()
 
         computations = []
         for i in range(doublet.shape[0]):
-
             frame = self.__get_data(code=doublet.hospital_code.iloc[i])
             parts = self.__decompose(frame=frame)
             data = self.__exc_structuring(parts=parts)
