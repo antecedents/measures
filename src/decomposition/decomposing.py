@@ -77,8 +77,10 @@ class Decomposing:
         :return:
         """
 
+        # The distinct pairings of boards & institutions
         doublet = self.__data[['health_board_code', 'hospital_code']].drop_duplicates()
 
+        # Compute
         computations = []
         for i in range(doublet.shape[0]):
             frame = self.__get_data(code=doublet.hospital_code.iloc[i])
