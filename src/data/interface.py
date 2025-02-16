@@ -1,5 +1,6 @@
 """Module interface.py"""
 import logging
+
 import pandas as pd
 
 import config
@@ -68,10 +69,10 @@ class Interface:
 
         return viable
 
-
     def exc(self, stamp: str) -> pd.DataFrame:
         """
 
+        :param stamp: A date stamp.
         :return:
             training: The training data set.<br>
             testing: The testing data set.
@@ -83,10 +84,12 @@ class Interface:
 
         # Reading
         data = self.__get_data(uri=uri)
+        data.info()
 
         # Institutions that have a viable number of observations.
         viable = self.__viable(blob=data)
         data = data.copy().loc[data['hospital_code'].isin(viable['hospital_code'].unique()), :]
+        data.info()
 
         # Index
         data.set_index(keys='week_ending_date', drop=True, inplace=True)
