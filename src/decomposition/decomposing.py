@@ -27,7 +27,8 @@ class Decomposing:
     @dask.delayed
     def __get_data(self, code: str) -> pd.DataFrame:
 
-        return self.__data.copy()[self.__data['hospital_code'] == code, :]
+        data: pd.DataFrame = self.__data.copy().loc[self.__data['hospital_code'] == code, :]
+        return data.sort_values(by='week_ending_date', ascending=True)
 
     @dask.delayed
     def __decompose(self, frame: pd.DataFrame) -> stl.DecomposeResult:
