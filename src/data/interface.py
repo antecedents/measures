@@ -51,11 +51,18 @@ class Interface:
         return frame[self.__configurations.fields]
 
     def __viable(self, blob: pd.DataFrame) -> pd.DataFrame:
+        """
 
+        :param blob:
+        :return:
+        """
+
+        # Counts per institution
         counts: pd.DataFrame = blob.copy()[['health_board_code', 'hospital_code']].groupby(
             by='health_board_code').value_counts().to_frame()
         counts.reset_index(inplace=True)
 
+        # Institutions that have a viable number of observations.
         viable: pd.DataFrame = counts.loc[counts['count'] >= (
                 self.__configurations.seasons * self.__configurations.cycles), :]
 
@@ -76,6 +83,10 @@ class Interface:
 
         # Reading
         data = self.__get_data(uri=uri)
+
+        # Institutions that have a viable number of observations.
+        viable = self.__viable(blob=data)
+        data = data.copy().loc[data['hospital_code'].isin(viable['hospital_code'].unique()), :]
 
         # Index
         data.set_index(keys='week_ending_date', drop=True, inplace=True)
