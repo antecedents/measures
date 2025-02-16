@@ -80,7 +80,7 @@ class Setup:
 
         self.__directories.cleanup(path=self.__configurations.warehouse)
 
-        return self.__directories.create(path=self.__configurations.decompositions_)
+        return self.__directories.create(path=self.__configurations.decomposition_)
 
     def exc(self) -> bool:
         """
