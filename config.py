@@ -40,3 +40,4 @@ class Config:
         # Seasons, trends, etc.
         self.seasons = 52
         self.trends = 1
+        self.cycles = 3
