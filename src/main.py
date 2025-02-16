@@ -34,7 +34,7 @@ def main():
     Steps
     '''
     data = src.data.interface.Interface(s3_parameters=s3_parameters).exc(stamp=stamp)
-    data.info()
+    src.decomposition.decomposing.Decomposing(data=data).exc()
 
     '''
     Cache
@@ -55,6 +55,7 @@ if __name__ == '__main__':
 
     # Classes
     import src.data.interface
+    import src.decomposition.decomposing
     import src.functions.cache
     import src.functions.service
     import src.s3.s3_parameters
