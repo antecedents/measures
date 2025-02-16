@@ -50,6 +50,18 @@ class Interface:
 
         return frame[self.__configurations.fields]
 
+    def __viable(self, blob: pd.DataFrame) -> pd.DataFrame:
+
+        counts: pd.DataFrame = blob.copy()[['health_board_code', 'hospital_code']].groupby(
+            by='health_board_code').value_counts().to_frame()
+        counts.reset_index(inplace=True)
+
+        viable: pd.DataFrame = counts.loc[counts['count'] >= (
+                self.__configurations.seasons * self.__configurations.cycles), :]
+
+        return viable
+
+
     def exc(self, stamp: str) -> pd.DataFrame:
         """
 
