@@ -1,3 +1,4 @@
+"""Module decomposing.py"""
 import logging
 
 import dask
@@ -10,6 +11,9 @@ import src.decomposition.structuring
 
 
 class Decomposing:
+    """
+    Decomposing
+    """
 
     def __init__(self, data: pd.DataFrame):
         """
