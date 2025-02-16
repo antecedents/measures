@@ -85,7 +85,8 @@ class Decomposing:
             parts = self.__decompose(frame=frame)
             data = self.__exc_structuring(parts=parts)
             message = self.__exc__persist(
-                data=data, health_board_code=doublet.health_board_code.iloc[i], hospital_code=doublet.hospital_code.iloc[i])
+                data=data, health_board_code=doublet.health_board_code.iloc[i],
+                hospital_code=doublet.hospital_code.iloc[i])
             computations.append(message)
 
         calculations = dask.compute(computations, scheduler='threads')[0]
