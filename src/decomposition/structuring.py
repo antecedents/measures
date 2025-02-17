@@ -1,9 +1,13 @@
-
-import pandas as pd
+"""Module structuring.py"""
 import numpy as np
+import pandas as pd
 import statsmodels.tsa.seasonal as stl
 
+
 class Structuring:
+    """
+    Structures the data in-line with graphing library expectations.
+    """
 
     def __init__(self):
         pass
@@ -25,6 +29,11 @@ class Structuring:
 
     @staticmethod
     def __get_variables(parts: stl.DecomposeResult):
+        """
+
+        :param parts: Decomposition components.
+        :return:
+        """
 
         decompositions = pd.DataFrame(
             data={'observation': parts.observed.values, 'trend': parts.trend.values, 'seasonal': parts.seasonal.values,
@@ -35,6 +44,11 @@ class Structuring:
         return decompositions
 
     def exc(self, parts: stl.DecomposeResult):
+        """
+
+        :param parts: Decomposition components.
+        :return:
+        """
 
         data = self.__get_variables(parts=parts)
         data = self.__epoch(blob=data)
