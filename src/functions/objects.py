@@ -4,6 +4,7 @@ Module objects.py
 import json
 import pathlib
 import pandas as pd
+import math
 
 import src.functions.api
 
@@ -38,7 +39,7 @@ class Objects:
 
         try:
             with open(file=path, mode='w', encoding='utf-8') as disk:
-                json.dump(obj=nodes, fp=disk, ensure_ascii=False, indent=4)
+                json.dump(obj=nodes, fp=disk, ensure_ascii=False, indent=4, allow_nan=False)
             return f'{name}: succeeded'
         except IOError as err:
             raise err from err
