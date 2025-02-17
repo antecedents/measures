@@ -33,7 +33,7 @@ class Interface:
 
         # Metadata
         metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__metadata = metadata.exc(name='data.json')
+        self.__metadata = metadata.exc(name='decomposition.json')
 
         # Instances
         self.__dictionary = src.transfer.dictionary.Dictionary()
