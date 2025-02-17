@@ -32,7 +32,8 @@ class Interface:
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
 
         # Metadata
-        self.__metadata = src.transfer.metadata.Metadata(connector=connector)
+        metadata = src.transfer.metadata.Metadata(connector=connector)
+        self.__metadata = metadata.exc(name='data.json')
 
         # Instances
         self.__dictionary = src.transfer.dictionary.Dictionary()
@@ -46,7 +47,7 @@ class Interface:
 
         frame = frame.assign(
             metadata = frame['section'].apply(
-                lambda x: self.__metadata.exc(name='data.json') if x == 'raw' else {}))
+                lambda x: self.__metadata if x == 'decomposition' else {}))
 
         return frame
 
@@ -58,7 +59,7 @@ class Interface:
 
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings = self.__dictionary.exc(
-            path=os.path.join(os.getcwd(), 'warehouse'), extension='csv', prefix='')
+            path=os.path.join(os.getcwd(), 'warehouse'), extension='json', prefix='warehouse/')
         logging.info(strings)
 
         # Adding metadata details per instance
@@ -67,6 +68,6 @@ class Interface:
 
         # Transfer
         messages = src.s3.ingress.Ingress(
-            service=self.__service, bucket_name=self.__s3_parameters.internal).exc(
+            service=self.__service, bucket_name=self.__s3_parameters.external).exc(
             strings=strings, tagging='project=emergency')
         logging.info(messages)
