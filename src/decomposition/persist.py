@@ -2,6 +2,7 @@
 import logging
 import os
 import pandas as pd
+import json
 
 import config
 import src.functions.objects
@@ -33,12 +34,15 @@ class Persist:
 
     def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
+        nodes = blob[self.__fields].to_dict(orient='split')
 
         :param blob:
         :return:
         """
 
-        nodes = blob[self.__fields].to_dict(orient='split')
+
+        string: str = blob[self.__fields].to_json(orient='split')
+        nodes: dict = json.loads(string)
 
         return nodes
 
