@@ -3,8 +3,8 @@ Module objects.py
 """
 import json
 import pathlib
+
 import pandas as pd
-import math
 
 import src.functions.api
 
