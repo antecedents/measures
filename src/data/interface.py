@@ -1,6 +1,4 @@
 """Module interface.py"""
-import logging
-
 import pandas as pd
 
 import config
@@ -29,12 +27,6 @@ class Interface:
         # Instances
         self.__streams = src.functions.streams.Streams()
         self.__configurations = config.Config()
-
-        # Logging
-        logging.basicConfig(level=logging.INFO,
-                            format='\n\n%(message)s\n%(asctime)s.%(msecs)03d\n\n',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
 
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
@@ -84,15 +76,12 @@ class Interface:
 
         # Reading
         data = self.__get_data(uri=uri)
-        data.info()
 
         # Institutions that have a viable number of observations.
         viable = self.__viable(blob=data)
         data = data.copy().loc[data['hospital_code'].isin(viable['hospital_code'].unique()), :]
-        data.info()
 
         # Index
         data.set_index(keys='week_ending_date', drop=True, inplace=True)
-        self.__logger.info(data.head())
 
         return data
