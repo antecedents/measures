@@ -1,8 +1,8 @@
 """Module persist.py"""
-import logging
-import os
-import pandas as pd
 import json
+import os
+
+import pandas as pd
 
 import config
 import src.functions.objects
@@ -26,11 +26,6 @@ class Persist:
 
         # Fields in focus
         self.__fields = ['milliseconds', 'observation', 'trend', 'seasonal', 'residue', 'weight']
-
-        # Logging: If necessary, set force = True
-        logging.basicConfig(level=logging.INFO, format='%(message)s\n%(asctime)s.%(msecs)03d',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
 
     def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
