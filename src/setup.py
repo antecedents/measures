@@ -31,7 +31,7 @@ class Setup:
 
         # Configurations, etc.
         self.__configurations = config.Config()
-        self.__prefix = 'series'
+        self.__prefix = 'warehouse/series'
 
         # Instances
         self.__directories = src.functions.directories.Directories()
