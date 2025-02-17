@@ -1,6 +1,4 @@
 """Module interface.py"""
-import logging
-
 import pandas as pd
 
 import config
@@ -30,12 +28,6 @@ class Interface:
         self.__streams = src.functions.streams.Streams()
         self.__configurations = config.Config()
 
-        # Logging
-        logging.basicConfig(level=logging.INFO,
-                            format='\n\n%(message)s\n%(asctime)s.%(msecs)03d\n\n',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        self.__logger = logging.getLogger(__name__)
-
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
 
@@ -51,9 +43,28 @@ class Interface:
 
         return frame[self.__configurations.fields]
 
+    def __viable(self, blob: pd.DataFrame) -> pd.DataFrame:
+        """
+
+        :param blob:
+        :return:
+        """
+
+        # Counts per institution
+        counts: pd.DataFrame = blob.copy()[['health_board_code', 'hospital_code']].groupby(
+            by='health_board_code').value_counts().to_frame()
+        counts.reset_index(inplace=True)
+
+        # Institutions that have a viable number of observations.
+        viable: pd.DataFrame = counts.loc[counts['count'] >= (
+                self.__configurations.seasons * self.__configurations.cycles), :]
+
+        return viable
+
     def exc(self, stamp: str) -> pd.DataFrame:
         """
 
+        :param stamp: A date stamp.
         :return:
             training: The training data set.<br>
             testing: The testing data set.
@@ -65,8 +76,12 @@ class Interface:
 
         # Reading
         data = self.__get_data(uri=uri)
-        self.__logger.info(data.head())
 
+        # Institutions that have a viable number of observations.
+        viable = self.__viable(blob=data)
+        data = data.copy().loc[data['hospital_code'].isin(viable['hospital_code'].unique()), :]
 
-        # Return
+        # Index
+        data.set_index(keys='week_ending_date', drop=True, inplace=True)
+
         return data
