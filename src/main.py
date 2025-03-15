@@ -32,7 +32,6 @@ if __name__ == '__main__':
 
     # Classes
     import src.data.interface
-    import src.decomposition.decomposing
     import src.functions.cache
     import src.preface.interface
     import src.transfer.interface
