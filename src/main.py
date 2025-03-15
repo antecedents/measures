@@ -19,10 +19,10 @@ def main():
     '''
     Set up
     '''
-    setup: bool = src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
-    if not setup:
-        src.functions.cache.Cache().exc()
-        sys.exit('No Executions')
+    # setup: bool = src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
+    # if not setup:
+    #     src.functions.cache.Cache().exc()
+    #     sys.exit('No Executions')
 
     '''
     Steps
@@ -55,9 +55,13 @@ if __name__ == '__main__':
     import src.preface.setup
     import src.transfer.interface
 
+    import src.preface.interface
+
+    connector, s3_parameters, service = src.preface.interface.Interface().exc()
+
     # S3 S3Parameters, Service Instance
-    connector = boto3.session.Session()
-    s3_parameters = src.s3.s3_parameters.S3Parameters(connector=connector).exc()
-    service = src.functions.service.Service(connector=connector, region_name=s3_parameters.region_name).exc()
+    # connector = boto3.session.Session()
+    # s3_parameters = src.s3.s3_parameters.S3Parameters(connector=connector).exc()
+    # service = src.functions.service.Service(connector=connector, region_name=s3_parameters.region_name).exc()
 
     main()
