@@ -1,7 +1,9 @@
 """
 Module config.py
 """
+import logging
 import os
+import datetime
 
 
 class Config:
@@ -17,10 +19,22 @@ class Config:
         Notes<br>
         -------<br>
 
-        <a href="https://otexts.com/fpp2/stationarity.html">Stationarity</a><br>
-        Upcoming: Drift
+
         """
 
+        '''
+        Date Stamp: The most recent Tuesday.  The code of Tuesday is 1, hence 
+        now.weekday() - 1
+        '''
+        now = datetime.datetime.now()
+        offset = (now.weekday() - 1) % 7
+        tuesday = now - datetime.timedelta(days=offset)
+        self.stamp: str = tuesday.strftime('%Y-%m-%d')
+        logging.info(self.stamp)
+
+
+        # ...
+        self.data_ = os.path.join(os.getcwd(), 'data')
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
         self.decomposition_ = os.path.join(self.warehouse, 'series', 'decomposition')
 
