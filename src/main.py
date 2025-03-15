@@ -12,14 +12,10 @@ def main():
 
     logger: logging.Logger = logging.getLogger(__name__)
 
-    '''
-    Steps
-    '''
+    # Steps
     src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
-    '''
-    Cache
-    '''
+    # Delete cache
     src.functions.cache.Cache().exc()
 
 
