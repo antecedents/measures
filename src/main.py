@@ -15,12 +15,7 @@ def main():
 
     logger: logging.Logger = logging.getLogger(__name__)
 
-    # Date Stamp: The most recent Tuesday.  The code of Tuesday is 1, hence now.weekday() - 1
-    now = datetime.datetime.now()
-    offset = (now.weekday() - 1) % 7
-    tuesday = now - datetime.timedelta(days=offset)
-    stamp = tuesday.strftime('%Y-%m-%d')
-    logger.info('Latest Tuesday: %s', stamp)
+
 
     '''
     Set up
@@ -33,9 +28,7 @@ def main():
     '''
     Steps
     '''
-    data = src.data.interface.Interface(s3_parameters=s3_parameters).exc(stamp=stamp)
-    src.decomposition.decomposing.Decomposing(data=data).exc()
-    src.transfer.interface.Interface(connector=connector, service=service, s3_parameters=s3_parameters).exc()
+    src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
     '''
     Cache
