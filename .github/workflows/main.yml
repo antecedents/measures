@@ -44,8 +44,8 @@ jobs:
           printf "\n src/data "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/data
           
-          printf "\n src/decomposition "
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/decomposition
+          printf "\n src/decompositions "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/decompositions
           
           printf "\n src/elements "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/elements
@@ -64,8 +64,8 @@ jobs:
           printf "\n src/data "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/data
           
-          printf "\n src/decomposition "
-          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/decomposition
+          printf "\n src/decompositions "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/decompositions
           
           printf "\n src/elements "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/elements
@@ -86,8 +86,8 @@ jobs:
           printf "\n Package src/data"
           pylint --rcfile .pylintrc src/data
           
-          printf "\n Package src/decomposition"
-          pylint --rcfile .pylintrc src/decomposition
+          printf "\n Package src/decompositions"
+          pylint --rcfile .pylintrc src/decompositions
           
           printf "\n Package src/elements"
           pylint --rcfile .pylintrc src/elements
