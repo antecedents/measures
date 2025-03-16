@@ -101,6 +101,9 @@ jobs:
           printf "\n Package src/functions"
           pylint --rcfile .pylintrc src/functions
           
+          printf "\n Package src/preface"
+          pylint --rcfile .pylintrc src/preface
+          
           printf "\n Package src/s3"
           pylint --rcfile .pylintrc src/s3
 
