@@ -7,6 +7,7 @@ import pandas as pd
 
 import config
 import src.decompositions.structuring
+import src.decompositions.persist
 import src.functions.streams
 import src.elements.text_attributes as txa
 
@@ -20,6 +21,7 @@ class Interface:
 
         self.__configurations = config.Config()
         self.__structuring = src.decompositions.structuring.Structuring()
+        self.__persist = src.decompositions.persist.Persist()
         self.__streams = src.functions.streams.Streams()
 
     def __get_data(self, uri: str) -> pd.DataFrame:
@@ -48,8 +50,10 @@ class Interface:
             pathname=os.path.join(self.__configurations.data_, 'data', '**', 'features.csv'))
         logging.info(listings)
 
+        computations = []
         for listing in listings:
             data = self.__get_data(uri=listing)
             data = self.__structuring.exc(blob=data.copy())
-            data.info()
-            logging.info(data.head())
+            message = self.__persist.exc(data=data)
+            computations.append(message)
+        logging.info(computations)
