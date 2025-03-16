@@ -16,9 +16,11 @@ class Config:
 
     def __init__(self) -> None:
         """
-        Notes<br>
-        -------<br>
+        <b>Notes</b><br>
+        ------<br>
 
+        Variables denoting a path - including or excluding a filename - have an underscore suffix; this suffix is
+        excluded for names such as warehouse, storage, depository, *key, etc.<br><br>
 
         """
 
@@ -32,11 +34,9 @@ class Config:
         self.stamp: str = tuesday.strftime('%Y-%m-%d')
         logging.info(self.stamp)
 
-
-        # ...
+        # Directories
         self.data_ = os.path.join(os.getcwd(), 'data')
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
-        self.decomposition_ = os.path.join(self.warehouse, 'series', 'decomposition')
 
         # Seed
         self.seed = 5
@@ -44,15 +44,3 @@ class Config:
         # Configuration files
         self.s3_parameters_key = 's3_parameters.yaml'
         self.metadata_ = 'metadata'
-
-        '''
-        For architecture JSON
-        '''
-
-        # Fields
-        self.fields = ['week_ending_date', 'health_board_code', 'hospital_code',  'n_attendances']
-
-        # Seasons, trends, etc.
-        self.seasons = 52
-        self.trends = 1
-        self.cycles = 3
