@@ -13,7 +13,8 @@ def main():
     logger: logging.Logger = logging.getLogger(__name__)
 
     # Steps
-    src.data.interface.Interface(s3_parameters=s3_parameters).exc()
+    # src.data.interface.Interface(s3_parameters=s3_parameters).exc()
+    src.decompositions.interface.Interface().exc()
 
     # Delete cache
     src.functions.cache.Cache().exc()
@@ -35,7 +36,8 @@ if __name__ == '__main__':
     import src.functions.cache
     import src.preface.interface
     import src.transfer.interface
+    import src.decompositions.interface
 
-    connector, s3_parameters, service = src.preface.interface.Interface().exc()
+    # connector, s3_parameters, service = src.preface.interface.Interface().exc()
 
     main()
