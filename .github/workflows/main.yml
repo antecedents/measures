@@ -53,6 +53,9 @@ jobs:
           printf "\n src/functions "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/functions
           
+          printf "\n src/preface "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/preface
+          
           printf "\n src/s3 "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/s3
           
@@ -72,6 +75,9 @@ jobs:
           
           printf "\n src/functions "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/functions
+          
+          printf "\n src/preface "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/preface
           
           printf "\n src/s3 "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/s3
