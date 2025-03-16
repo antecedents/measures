@@ -1,4 +1,6 @@
 """Module structuring.py"""
+import logging
+
 import numpy as np
 import pandas as pd
 
@@ -20,8 +22,9 @@ class Structuring:
         decompositions['milliseconds']  = (
                 decompositions['week_ending_date'].to_numpy().astype(np.int64) / (10 ** 6)
         ).astype(np.longlong)
-
         decompositions.sort_values(by='week_ending_date', inplace=True)
+
+        decompositions.info()
 
         return decompositions
 
