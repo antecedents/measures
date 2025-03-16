@@ -38,9 +38,6 @@ class Config:
         self.data_ = os.path.join(os.getcwd(), 'data')
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
 
-        # Seed
-        self.seed = 5
-
         # Configuration files
         self.s3_parameters_key = 's3_parameters.yaml'
         self.metadata_ = 'metadata'
