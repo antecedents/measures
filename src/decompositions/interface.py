@@ -3,6 +3,8 @@ import os
 import logging
 import glob
 
+import dask
+
 import pandas as pd
 
 import config
@@ -16,14 +18,16 @@ class Interface:
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
-        self.__structuring = src.decompositions.structuring.Structuring()
-        self.__persist = src.decompositions.persist.Persist()
         self.__streams = src.functions.streams.Streams()
 
+        self.__structuring = dask.delayed(src.decompositions.structuring.Structuring().exc)
+        self.__persist = dask.delayed(src.decompositions.persist.Persist().exc)
+
+    @dask.delayed
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
 
@@ -34,7 +38,6 @@ class Interface:
         text = txa.TextAttributes(uri=uri, header=0)
 
         frame = self.__streams.read(text=text)
-
         frame['week_ending_date'] = pd.to_datetime(
             frame['week_ending_date'].astype(dtype=str), errors='coerce', format='%Y-%m-%d')
 
@@ -48,12 +51,14 @@ class Interface:
 
         listings = glob.glob(
             pathname=os.path.join(self.__configurations.data_, 'data', '**', 'features.csv'))
-        logging.info(listings)
+
 
         computations = []
         for listing in listings:
             data = self.__get_data(uri=listing)
-            data = self.__structuring.exc(blob=data.copy())
-            message = self.__persist.exc(data=data)
+            data = self.__structuring(blob=data.copy())
+            message = self.__persist(data=data)
             computations.append(message)
-        logging.info(computations)
+        messages = dask.compute(computations, scheduler='threads')[0]
+
+        logging.info(messages)
