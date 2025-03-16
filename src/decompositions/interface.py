@@ -15,6 +15,9 @@ import src.elements.text_attributes as txa
 
 
 class Interface:
+    """
+    The interface to the programs that prepare the appropriate data structures for graphing the decompositions.
+    """
 
     def __init__(self):
         """
