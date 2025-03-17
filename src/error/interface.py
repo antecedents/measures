@@ -7,6 +7,7 @@ import pathlib
 import config
 import src.elements.seasonal as sa
 import src.error.seasonal
+import src.error.trend
 
 
 class Interface:
@@ -52,3 +53,4 @@ class Interface:
             logging.info(seasonal.estimates.head())
             logging.info(seasonal.tests.head())
             logging.info(seasonal.futures.head())
+
