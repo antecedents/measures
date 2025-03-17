@@ -6,6 +6,7 @@ import pathlib
 
 
 import config
+import src.elements.seasonal as sa
 import src.functions.objects
 
 import src.error.seasonal
@@ -41,9 +42,9 @@ class Error:
                 codes.append(os.path.basename(listing))
 
         logging.info(codes)
-
         for code in codes:
 
-            seasonal = src.error.seasonal.Seasonal(code=code).exc()
+            seasonal: sa.Seasonal = src.error.seasonal.Seasonal(code=code).exc()
+            logging.info(seasonal.estimates.head())
 
 
