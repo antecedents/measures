@@ -11,12 +11,12 @@ import src.error.seasonal
 
 class Interface:
     """
-    Steps
+    Interface
     """
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
@@ -42,5 +42,3 @@ class Interface:
 
             seasonal: sa.Seasonal = src.error.seasonal.Seasonal(code=code).exc()
             logging.info(seasonal.estimates.head())
-
-
