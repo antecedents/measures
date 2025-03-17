@@ -1,3 +1,4 @@
+"""Module """
 import glob
 import logging
 import os
@@ -8,7 +9,7 @@ import src.elements.seasonal as sa
 import src.error.seasonal
 
 
-class Error:
+class Interface:
     """
     Steps
     """
