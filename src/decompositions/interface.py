@@ -1,17 +1,16 @@
 """Module interface.py"""
-import os
-import logging
 import glob
+import logging
+import os
 
 import dask
-
 import pandas as pd
 
 import config
-import src.decompositions.structuring
 import src.decompositions.persist
-import src.functions.streams
+import src.decompositions.structuring
 import src.elements.text_attributes as txa
+import src.functions.streams
 
 
 class Interface:
