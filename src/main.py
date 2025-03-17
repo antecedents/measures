@@ -17,7 +17,7 @@ def main():
 
     # Steps
     # src.data.interface.Interface(s3_parameters=s3_parameters).exc()
-    src.decompositions.interface.Interface().exc()
+    # src.decompositions.interface.Interface().exc()
     src.metrics.steps.Steps().exc()
 
     # Delete cache
