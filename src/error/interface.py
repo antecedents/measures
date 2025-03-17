@@ -3,10 +3,12 @@ import logging
 import os
 import pathlib
 
-import pandas as pd
+
 
 import config
 import src.functions.objects
+
+import src.error.seasonal
 
 
 class Error:
@@ -39,3 +41,9 @@ class Error:
                 codes.append(os.path.basename(listing))
 
         logging.info(codes)
+
+        for code in codes:
+
+            seasonal = src.error.seasonal.Seasonal(code=code).exc()
+
+
