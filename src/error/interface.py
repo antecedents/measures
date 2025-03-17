@@ -3,12 +3,8 @@ import logging
 import os
 import pathlib
 
-
-
 import config
 import src.elements.seasonal as sa
-import src.functions.objects
-
 import src.error.seasonal
 
 
@@ -23,7 +19,6 @@ class Error:
         """
 
         self.__configurations = config.Config()
-        self.__objects = src.functions.objects.Objects()
 
     def exc(self):
         """
