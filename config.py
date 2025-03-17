@@ -1,9 +1,9 @@
 """
 Module config.py
 """
+import datetime
 import logging
 import os
-import datetime
 
 
 class Config:
