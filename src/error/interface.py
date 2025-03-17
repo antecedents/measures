@@ -21,14 +21,13 @@ class Interface:
 
         self.__configurations = config.Config()
 
-    def exc(self):
+    def __get_codes(self) -> list[str] | None:
         """
 
         :return:
         """
 
         listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'models', '**'))
-        logging.info(listings)
 
         codes = []
         for listing in listings:
@@ -37,8 +36,19 @@ class Interface:
             if state:
                 codes.append(os.path.basename(listing))
 
-        logging.info(codes)
-        for code in codes:
+        return codes
 
+    def exc(self):
+        """
+
+        :return:
+        """
+
+        codes = self.__get_codes()
+        logging.info(codes)
+
+        for code in codes:
             seasonal: sa.Seasonal = src.error.seasonal.Seasonal(code=code).exc()
             logging.info(seasonal.estimates.head())
+            logging.info(seasonal.tests.head())
+            logging.info(seasonal.futures.head())
