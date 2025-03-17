@@ -37,14 +37,19 @@ class Trend:
         text = txa.TextAttributes(uri=uri, header=0)
 
         frame = self.__streams.read(text=text)
-        frame['week_ending_date'] = pd.to_datetime(
+        frame['date'] = pd.to_datetime(
             frame['date'].astype(str), errors='coerce', format='%Y-%m-%d')
-        frame.drop(columns='date', inplace=True)
+        frame.rename(columns={'date': 'week_ending_date'}, inplace=True)
         frame.sort_values(by='week_ending_date', ascending=True, inplace=True)
 
         return frame
 
     def exc(self, code: str):
+        """
+
+        :param code:
+        :return:
+        """
 
         uri = os.path.join(self.__configurations.data_, 'models', code, 'tcf_forecasts.json')
 
