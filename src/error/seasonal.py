@@ -1,5 +1,4 @@
 """Module seasonal.py"""
-import logging
 import os
 
 import pandas as pd
@@ -25,15 +24,13 @@ class Seasonal:
 
         self.__configurations = config.Config()
 
-        # For reading JSON files
-        self.__objects = src.functions.objects.Objects()
-
-        # Reading-in the seasonal component forecasting data
+        # Data path
         uri = os.path.join(self.__configurations.data_, 'models', code, 'scf_estimates.json')
 
-        self.__data = self.__objects.read(uri=uri)
+        # Reading-in the seasonal component forecasting data
+        self.__data = src.functions.objects.Objects().read(uri=uri)
 
-    def __get_section(self, section: str):
+    def __get_section(self, section: str) ->pd.DataFrame:
         """
 
         :param section: A data section of the estimations dictionary
@@ -49,7 +46,7 @@ class Seasonal:
 
         return frame
 
-    def exc(self):
+    def exc(self) -> sa.Seasonal:
         """
 
         :return:
