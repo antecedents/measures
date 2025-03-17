@@ -1,4 +1,5 @@
 import os
+import logging
 
 import pandas as pd
 
@@ -25,6 +26,7 @@ class Seasonal:
 
         # Reading-in the seasonal component forecasting data
         uri = os.path.join(self.__configurations.data_, 'models', code, 'scf_estimates.json')
+        logging.info(uri)
         self.__data = self.__objects.read(uri=uri)
 
     def __get_section(self, section: str):
@@ -41,14 +43,7 @@ class Seasonal:
 
     def exc(self):
 
-        sa.Seasonal(
+        return sa.Seasonal(
             estimates=self.__get_section(section='estimates'),
             tests=self.__get_section(section='tests'),
             futures=self.__get_section(section='futures'))
-
-
-
-
-
-
-
