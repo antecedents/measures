@@ -1,6 +1,8 @@
+"""Module seasonal.py"""
 import typing
 
 import pandas as pd
+
 
 class Seasonal(typing.NamedTuple):
     """
