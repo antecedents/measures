@@ -53,4 +53,3 @@ class Interface:
             logging.info(seasonal.estimates.head())
             logging.info(seasonal.tests.head())
             logging.info(seasonal.futures.head())
-
