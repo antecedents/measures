@@ -18,7 +18,7 @@ def main():
     # Steps
     # src.data.interface.Interface(s3_parameters=s3_parameters).exc()
     # src.decompositions.interface.Interface().exc()
-    src.metrics.steps.Steps().exc()
+    src.error.interface.Error().exc()
 
     # Delete cache
     src.functions.cache.Cache().exc()
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     import src.data.interface
     import src.decompositions.interface
     import src.functions.cache
-    import src.metrics.steps
+    import src.error.interface
     import src.preface.interface
     import src.transfer.interface
 
