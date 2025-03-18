@@ -48,23 +48,15 @@ class Interface:
         """
 
         codes = self.__get_codes()
-        logging.info(codes)
 
         for code in codes:
             seasonal: sa.Seasonal = src.error.seasonal.Seasonal(code=code).exc()
-            logging.info('estimates: %s', seasonal.estimates.shape)
-            logging.info('tests: %s', seasonal.tests.shape)
-            logging.info('futures: %s', seasonal.futures.shape)
-
             trend = self.__trend.exc(code=code)
-            logging.info('trend: %s', trend.shape)
 
             _estimates = seasonal.estimates.merge(trend, how='left', on='week_ending_date')
             _tests = seasonal.tests.merge(trend, how='left', on='week_ending_date')
             _futures = seasonal.futures.merge(trend, how='left', on='week_ending_date')
 
-            _estimates.info()
-            _tests.info()
-            _futures.info()
-
-
+            logging.info(_estimates.head())
+            logging.info(_tests.head())
+            logging.info(_futures.head())
