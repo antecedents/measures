@@ -22,6 +22,8 @@ class Interface:
 
         self.__configurations = config.Config()
 
+        self.__trend = src.error.trend.Trend()
+
     def __get_codes(self) -> list[str] | None:
         """
 
@@ -53,3 +55,8 @@ class Interface:
             logging.info(seasonal.estimates.head())
             logging.info(seasonal.tests.head())
             logging.info(seasonal.futures.head())
+
+            trend = self.__trend.exc(code=code)
+            logging.info(trend.head())
+
+
