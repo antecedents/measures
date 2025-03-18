@@ -51,6 +51,6 @@ class Trend:
         :return:
         """
 
-        uri = os.path.join(self.__configurations.data_, 'models', code, 'tcf_forecasts.json')
+        uri = os.path.join(self.__configurations.data_, 'models', code, 'tcf_forecasts.csv')
 
         return self.__get_data(uri=uri)
