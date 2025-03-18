@@ -53,6 +53,6 @@ class Seasonal:
         """
 
         return sa.Seasonal(
-            estimates=self.__get_section(section='estimates'),
+            estimates=self.__get_section(section='estimates').drop(columns='seasonal'),
             tests=self.__get_section(section='tests'),
             futures=self.__get_section(section='futures'))
