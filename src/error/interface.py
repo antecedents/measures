@@ -4,10 +4,12 @@ import logging
 import os
 import pathlib
 
+
 import config
 import src.elements.seasonal as sa
 import src.error.seasonal
 import src.error.trend
+import src.error.points
 
 
 class Interface:
@@ -22,7 +24,9 @@ class Interface:
 
         self.__configurations = config.Config()
 
+        self.__seasonal = src.error.seasonal.Seasonal()
         self.__trend = src.error.trend.Trend()
+        self.__points = src.error.points.Points()
 
     def __get_codes(self) -> list[str] | None:
         """
@@ -50,13 +54,6 @@ class Interface:
         codes = self.__get_codes()
 
         for code in codes:
-            seasonal: sa.Seasonal = src.error.seasonal.Seasonal(code=code).exc()
+            seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
             trend = self.__trend.exc(code=code)
-
-            _estimates = seasonal.estimates.merge(trend, how='left', on='week_ending_date')
-            _tests = seasonal.tests.merge(trend, how='left', on='week_ending_date')
-            _futures = seasonal.futures.merge(trend, how='left', on='week_ending_date')
-
-            logging.info(_estimates.head())
-            logging.info(_tests.head())
-            logging.info(_futures.head())
+            self.__points.exc(seasonal=seasonal, trend=trend)
