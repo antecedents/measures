@@ -17,15 +17,6 @@ class Points:
                          'std': 'tc_estimate_deviation'}
 
     @staticmethod
-    def __milliseconds(blob: pd.DataFrame):
-
-        frame = blob.copy()
-        frame['milliseconds']  = (
-                frame['week_ending_date'].to_numpy().astype(np.int64) / (10 ** 6)
-        ).astype(np.longlong)
-        frame.sort_values(by='week_ending_date', inplace=True)
-
-    @staticmethod
     def __metric(period: float, average: float, deviation: float, percentile: float) -> float:
         """
         period + average + (z-score * standard deviation)
