@@ -48,7 +48,7 @@ class Seasonal:
         :return:
         """
 
-        # Reading-in the seasonal component forecasting data
+        # Reading-in the seasonal component estimations data
         uri = os.path.join(self.__configurations.data_, 'models', code, 'scf_estimates.json')
         data = src.functions.objects.Objects().read(uri=uri)
 
