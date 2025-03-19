@@ -1,14 +1,21 @@
-
-import pandas as pd
+"""Module points.py"""
 import numpy as np
-
+import pandas as pd
 import scipy.stats as sta
 
 import src.elements.seasonal as sa
 
+
 class Points:
+    """
+    <b>Notes</b><br>
+    ------<br>
+    """
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__span = 0.90
 
@@ -53,8 +60,8 @@ class Points:
     def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param seasonal:
-        :param trend:
+        :param seasonal: The seasonal components estimations.
+        :param trend: The trend components estimations.
         :return:
         """
 
