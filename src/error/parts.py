@@ -22,6 +22,7 @@ class Parts:
 
         self.__span = 0.90
 
+        # The fields in focus, and descriptive names
         self.__fields = ['week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
         self.__rename = {'seasonal_est': 'sc_estimate', 'mu': 'tc_estimate',
                          'std': 'tc_estimate_deviation'}
@@ -60,7 +61,7 @@ class Parts:
                 tests[self.__fields].rename(columns=self.__rename),
                 futures[self.__fields].rename(columns=self.__rename))
     
-    def __add_boundaries(self, data: pd.DataFrame):
+    def __add_boundaries(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         
         :param data: 
@@ -76,7 +77,7 @@ class Parts:
         
         return data
         
-    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pr.Parts:
         """
 
         :param seasonal: The seasonal components estimations.
