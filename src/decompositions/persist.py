@@ -29,7 +29,7 @@ class Persist:
         src.functions.directories.Directories().create(self.__path)
 
         # Fields in focus
-        self.__fields = ['milliseconds', 'n_attendances', 'ln', 'trend', 'seasonal', 'residue']
+        self.__fields = ['milliseconds', 'n_attendances', 'trend', 'seasonal', 'residue']
 
     def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
