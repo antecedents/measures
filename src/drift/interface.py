@@ -1,12 +1,15 @@
-import os
-import glob
 import datetime
+import glob
+import logging
+import os
 
+import numpy as np
 import pandas as pd
 
 import config
-import src.functions.streams
+import src.drift.wasserstein
 import src.elements.text_attributes as txa
+import src.functions.streams
 
 
 class Interface:
@@ -16,8 +19,18 @@ class Interface:
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
 
+        self.__arguments = arguments
+        self.__period = self.__arguments.get('seasons')
         self.__boundary = datetime.datetime.strptime(
-            arguments.get('boundary'), '%Y-%m-%d')
+            self.__arguments.get('boundary'), '%Y-%m-%d')
+
+    def __divergence(self, data: pd.DataFrame):
+
+        measure = data['n_attendances'].values
+
+        instance = src.drift.wasserstein.Wasserstein(period=self.__period)
+
+        return instance.exc(measure=measure)
 
     def __get_data(self, uri: str) -> pd.DataFrame:
 
@@ -29,12 +42,13 @@ class Interface:
 
         return frame.copy().loc[frame['week_ending_date'] >= self.__boundary, : ]
 
-
     def exc(self):
 
         listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
-
-        for listing in listings:
+        for listing in listings[:1]:
 
             data = self.__get_data(uri=listing)
             data.info()
+
+            scores = self.__divergence(data=data)
+            logging.info(scores)
