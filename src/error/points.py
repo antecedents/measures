@@ -41,7 +41,7 @@ class Points:
 
         return period + average + (score * deviation)
 
-    def __set_data(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+    def __set_data(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param seasonal:
@@ -59,7 +59,7 @@ class Points:
 
         return data.rename(columns=self.__rename)
 
-    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param seasonal:
@@ -75,3 +75,5 @@ class Points:
         data['l_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
             percentile=(0.5 - 0.5*self.__span))
+
+        return data
