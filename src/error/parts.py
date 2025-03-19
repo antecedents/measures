@@ -1,14 +1,15 @@
-"""Module points.py"""
+"""Module parts.py"""
 import typing
+
 import numpy as np
 import pandas as pd
 import scipy.stats as sta
 
-import src.elements.seasonal as sa
 import src.elements.parts as pr
+import src.elements.seasonal as sa
 
 
-class Points:
+class Parts:
     """
     <b>Notes</b><br>
     ------<br>
