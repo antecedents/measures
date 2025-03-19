@@ -22,15 +22,12 @@ class Trend:
         """
 
         self.__configurations = config.Config()
-
         self.__streams = src.functions.streams.Streams()
-
-
 
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
 
-        :param uri:
+        :param uri: The uniform resource string of an institution's tcf_forecasts.csv file
         :return:
         """
 
@@ -47,7 +44,7 @@ class Trend:
     def exc(self, code: str):
         """
 
-        :param code:
+        :param code: The identification code of an institution/hospital.
         :return:
         """
 
