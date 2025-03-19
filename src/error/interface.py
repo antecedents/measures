@@ -1,6 +1,5 @@
 """Module """
 import glob
-import logging
 import os
 import pathlib
 
@@ -9,6 +8,7 @@ import pandas as pd
 import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.error.metrics
 import src.error.parts
 import src.error.seasonal
 import src.error.trend
@@ -34,6 +34,7 @@ class Interface:
         self.__seasonal = src.error.seasonal.Seasonal()
         self.__trend = src.error.trend.Trend()
         self.__parts = src.error.parts.Parts()
+        self.__metrics = src.error.metrics.Metrics()
 
     def __get_codes(self) -> list[str] | None:
         """
@@ -64,4 +65,4 @@ class Interface:
             seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
             trend: pd.DataFrame = self.__trend.exc(code=code)
             parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
-            logging.info(parts)
+            self.__metrics.exc(parts=parts)
