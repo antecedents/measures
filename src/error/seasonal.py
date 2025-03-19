@@ -27,7 +27,7 @@ class Seasonal:
     def __get_section(data: dict, section: str) ->pd.DataFrame:
         """
 
-        :param data:
+        :param data: A data dictionary of an institution's seasonal component modelling estimations.
         :param section: A data section of the estimations dictionary
         :return:
         """
