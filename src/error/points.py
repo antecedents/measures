@@ -27,12 +27,12 @@ class Points:
     @staticmethod
     def __metric(period: float, average: float, deviation: float, percentile: float) -> float:
         """
-        Parallel calculations via vectors
+        period + average + (z-score * standard deviation)
 
-        :param period:
-        :param average:
-        :param deviation:
-        :param percentile:
+        :param period:  An institution's seasonal component estimates.
+        :param average: The averages of the samples of an institution's trend component estimates.
+        :param deviation: The standard deviations of the trend component estimates samples.
+        :param percentile: The percentile boundary of interest.
         :return:
         """
 
@@ -42,11 +42,9 @@ class Points:
 
     def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
         """
-        Focus
-            estimated mean + (z-score * standard deviation)
-        whereby
-            z-score = sci.norm.ppf(percentile value)
-
+        
+        :param seasonal:
+        :param trend:
         :return:
         """
 
