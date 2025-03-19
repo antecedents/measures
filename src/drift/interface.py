@@ -3,7 +3,6 @@ import glob
 import logging
 import os
 
-import numpy as np
 import pandas as pd
 
 import config
@@ -13,8 +12,17 @@ import src.functions.streams
 
 
 class Interface:
+    """
+    <b>Notes</b><br>
+    ------<br>
+    The interface to drift score programs.<br>
+    """
 
     def __init__(self, arguments: dict):
+        """
+
+        :param arguments:
+        """
 
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
@@ -25,6 +33,11 @@ class Interface:
             self.__arguments.get('boundary'), '%Y-%m-%d')
 
     def __divergence(self, data: pd.DataFrame):
+        """
+
+        :param data:
+        :return:
+        """
 
         measure = data['n_attendances'].values
 
@@ -33,6 +46,11 @@ class Interface:
         return instance.exc(measure=measure)
 
     def __get_data(self, uri: str) -> pd.DataFrame:
+        """
+
+        :param uri:
+        :return:
+        """
 
         text = txa.TextAttributes(uri=uri, header=0)
         frame = self.__streams.read(text=text)
@@ -43,6 +61,10 @@ class Interface:
         return frame.copy().loc[frame['week_ending_date'] >= self.__boundary, : ]
 
     def exc(self):
+        """
+
+        :return:
+        """
 
         listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
         for listing in listings[:1]:
