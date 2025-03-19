@@ -4,12 +4,14 @@ import logging
 import os
 import pathlib
 
+import pandas as pd
 
 import config
+import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.error.parts
 import src.error.seasonal
 import src.error.trend
-import src.error.points
 
 
 class Interface:
@@ -17,16 +19,21 @@ class Interface:
     Interface
     """
 
-    def __init__(self):
-        """
-        Constructor
+    def __init__(self, arguments: dict):
         """
 
+        :param arguments: A set of model development, and supplementary, arguments.
+        """
+
+        self.__arguments = arguments
+
+        # Configurations
         self.__configurations = config.Config()
 
+        # Instances
         self.__seasonal = src.error.seasonal.Seasonal()
         self.__trend = src.error.trend.Trend()
-        self.__points = src.error.points.Points()
+        self.__parts = src.error.parts.Parts()
 
     def __get_codes(self) -> list[str] | None:
         """
@@ -55,6 +62,6 @@ class Interface:
 
         for code in codes:
             seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
-            trend = self.__trend.exc(code=code)
-            points = self.__points.exc(seasonal=seasonal, trend=trend)
-            logging.info(points)
+            trend: pd.DataFrame = self.__trend.exc(code=code)
+            parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
+            logging.info(parts)
