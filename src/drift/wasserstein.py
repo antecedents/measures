@@ -17,7 +17,7 @@ class Wasserstein:
 
     def __get__metric(self, measure: np.ndarray, address: int) -> float:
         """
-        
+
         :param measure:
         :param address:
         :return:
