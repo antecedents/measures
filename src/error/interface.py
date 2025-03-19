@@ -56,4 +56,5 @@ class Interface:
         for code in codes:
             seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
             trend = self.__trend.exc(code=code)
-            self.__points.exc(seasonal=seasonal, trend=trend)
+            points = self.__points.exc(seasonal=seasonal, trend=trend)
+            logging.info(points)
