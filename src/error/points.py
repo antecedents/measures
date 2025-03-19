@@ -62,9 +62,3 @@ class Points:
             period = data['seasonal_est'], average=data['mu'], deviation=data['std'], percentile=(0.5 + 0.5*self.__span))
         data['l_estimate'] = self.__metric(
             period = data['seasonal_est'], average=data['mu'], deviation=data['std'], percentile=(0.5 - 0.5*self.__span))
-
-        # sum(|error|)/N <- mae
-        # sum(error.^2)/N <- mse
-        # sqrt(mse) <- rmse
-        # 100*sum(abs(error./original))/N <- mape
-
