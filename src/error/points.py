@@ -12,8 +12,9 @@ class Points:
 
         self.__span = 0.90
 
-        # self__rename = {'seasonal_est': 'sc_estimate', 'mu': 'tc_estimate',
-        #                'std': 'tc_estimate_deviation'}
+        self.__fields = ['week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
+        self.__rename = {'seasonal_est': 'sc_estimate', 'mu': 'tc_estimate',
+                         'std': 'tc_estimate_deviation'}
 
     @staticmethod
     def __milliseconds(blob: pd.DataFrame):
@@ -40,9 +41,9 @@ class Points:
 
         return period + average + (score * deviation)
 
-    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+    def __set_data(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
         """
-        
+
         :param seasonal:
         :param trend:
         :return:
@@ -53,10 +54,24 @@ class Points:
         futures = seasonal.futures.merge(trend, how='left', on='week_ending_date')
         futures['n_attendances'] = np.nan
 
-        fields = ['week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
-        data = pd.concat((training[fields], testing[fields], futures[fields]), axis=0, ignore_index=True)
+        data = pd.concat((training[self.__fields], testing[self.__fields], futures[self.__fields]),
+                         axis=0, ignore_index=True)
+
+        return data.rename(columns=self.__rename)
+
+    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+        """
+
+        :param seasonal:
+        :param trend:
+        :return:
+        """
+
+        data = self.__set_data(seasonal=seasonal, trend=trend)
 
         data['u_estimate'] = self.__metric(
-            period = data['seasonal_est'], average=data['mu'], deviation=data['std'], percentile=(0.5 + 0.5*self.__span))
+            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
+            percentile=(0.5 + 0.5*self.__span))
         data['l_estimate'] = self.__metric(
-            period = data['seasonal_est'], average=data['mu'], deviation=data['std'], percentile=(0.5 - 0.5*self.__span))
+            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
+            percentile=(0.5 - 0.5*self.__span))
