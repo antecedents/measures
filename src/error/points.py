@@ -1,9 +1,11 @@
 """Module points.py"""
+import typing
 import numpy as np
 import pandas as pd
 import scipy.stats as sta
 
 import src.elements.seasonal as sa
+import src.elements.parts as pr
 
 
 class Points:
@@ -39,7 +41,8 @@ class Points:
 
         return period + average + (score * deviation)
 
-    def __set_data(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pd.DataFrame:
+    def __get_parts(self, seasonal: sa.Seasonal, trend: pd.DataFrame) \
+            -> typing.Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
 
         :param seasonal:
@@ -47,25 +50,21 @@ class Points:
         :return:
         """
 
-        training = seasonal.estimates.merge(trend, how='left', on='week_ending_date')
-        testing = seasonal.tests.merge(trend, how='left', on='week_ending_date')
+        estimates = seasonal.estimates.merge(trend, how='left', on='week_ending_date')
+        tests = seasonal.tests.merge(trend, how='left', on='week_ending_date')
         futures = seasonal.futures.merge(trend, how='left', on='week_ending_date')
         futures['n_attendances'] = np.nan
 
-        data = pd.concat((training[self.__fields], testing[self.__fields], futures[self.__fields]),
-                         axis=0, ignore_index=True)
-
-        return data.rename(columns=self.__rename)
-
-    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pd.DataFrame:
+        return (estimates[self.__fields].rename(columns=self.__rename), 
+                tests[self.__fields].rename(columns=self.__rename),
+                futures[self.__fields].rename(columns=self.__rename))
+    
+    def __add_boundaries(self, data: pd.DataFrame):
         """
-
-        :param seasonal: The seasonal components estimations.
-        :param trend: The trend components estimations.
-        :return:
+        
+        :param data: 
+        :return: 
         """
-
-        data = self.__set_data(seasonal=seasonal, trend=trend)
 
         data['u_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
@@ -73,5 +72,21 @@ class Points:
         data['l_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
             percentile=(0.5 - 0.5*self.__span))
-
+        
         return data
+        
+    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame):
+        """
+
+        :param seasonal: The seasonal components estimations.
+        :param trend: The trend components estimations.
+        :return:
+        """
+
+        estimates, tests, futures = self.__get_parts(seasonal=seasonal, trend=trend)
+        
+        estimates = self.__add_boundaries(data=estimates.copy())
+        tests = self.__add_boundaries(data=tests.copy())
+        futures = self.__add_boundaries(data=futures.copy())
+
+        return pr.Parts(estimates=estimates, tests=tests, futures=futures)
