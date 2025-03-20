@@ -12,40 +12,61 @@ class Metrics:
         pass
 
     @staticmethod
-    def __root_mse(data: pd.DataFrame):
+    def __mean_ape(data: pd.DataFrame):
         """
-        Root of the mean (of the square of the error per point); lower & upper boundary
+        The mean of the (absolute error rate per point) values; percentage.
+
+        :return:
+        """
+
+        er = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
+        logging.info(100*np.sum(er, axis=0)/er.shape[0])
+
+    @staticmethod
+    def __ape(data: pd.DataFrame):
+        """
+        This function calculates the q<sup>th</sup> percentile values per set of absolute error rates.
+
+        :param data:
+        :return:
+        """
+
+        aer = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
+        logging.info(100*np.percentile(a=aer, q=[10, 25, 50, 75, 90], axis=0))
+
+    @staticmethod
+    def __root_mse(data: pd.DataFrame) -> pd.DataFrame:
+        """
+        This function calculates
+            square root (mean ( a set of square errors ) )
+        per set of square errors.
 
         :param data:
         :return:
         """
 
         se: np.ndarray = np.power(data[['l_e_error', 'u_e_error']].to_numpy(), 2)
-        mse = np.sum(se, axis=0)/se.shape[0]
-        logging.info(np.sqrt(mse))
+        mse = np.expand_dims(
+            np.sum(se, axis=0)/se.shape[0], axis=0)
+
+        frame = pd.DataFrame(data=np.sqrt(mse), columns=['l_e_metrics', 'u_e_metrics'], index=['r_mse'])
+
+        return frame
 
     @staticmethod
-    def __average_percentage(data: pd.DataFrame):
-        """
-        The average of the (percentage absolute error rate per point)
-
-        :return:
-        """
-
-        er = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
-        mer = np.sum(er, axis=0)/er.shape[0]
-        logging.info(100*mer)
-
-    @staticmethod
-    def __median_percentage(data: pd.DataFrame):
+    def __npe(data: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param data:
         :return:
         """
 
-        er = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
-        logging.info(100*np.median(er, axis=0))
+        ner = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
+        tiles = np.percentile(a=ner, q=[10, 25, 50, 75, 90], axis=0)
+        frame = pd.DataFrame(data=100*tiles, columns=['l_e_metrics', 'u_e_metrics'],
+                             index=['l_whisker', 'l_quarter', 'median', 'u_quarter', 'u_whisker'])
+
+        return frame
 
     def exc(self, parts: pr.Parts):
         """
@@ -56,8 +77,4 @@ class Metrics:
 
         data = parts.estimates
         self.__root_mse(data=data)
-        self.__average_percentage(data=data)
-        self.__median_percentage(data=data)
-
-        er = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
-        logging.info(np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0))
+        self.__npe(data=data)
