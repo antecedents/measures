@@ -73,7 +73,7 @@ class Measures:
         """
 
         :param parts: An institution's data object consisting of forecasts w.r.t. training,
-                      testing, and futures phases.<br>
+                      testing, and futures parts.<br>
         :param code: An institution's identification code.<br>
         :return:
         """
