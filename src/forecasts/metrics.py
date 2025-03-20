@@ -1,3 +1,4 @@
+"""Module metrics.py"""
 import logging
 
 import numpy as np
@@ -45,6 +46,18 @@ class Metrics:
 
         return frame
 
+    def __get_metrics(self, data: pd.DataFrame):
+        """
+
+        :param data:
+        :return:
+        """
+
+        frame = pd.concat((self.__root_mse(data=data), self.__pe(data=data)),
+                          axis=0, ignore_index=False)
+
+        return frame.to_dict(orient='tight')
+
     def exc(self, parts: pr.Parts):
         """
 
@@ -52,6 +65,9 @@ class Metrics:
         :return:
         """
 
-        data = parts.estimates
-        self.__root_mse(data=data)
-        self.__pe(data=data)
+        nodes = {
+            'estimates': self.__get_metrics(data=parts.estimates),
+            'tests': self.__get_metrics(data=parts.tests)
+        }
+
+        logging.info(nodes)
