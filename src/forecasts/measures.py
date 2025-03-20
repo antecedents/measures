@@ -52,10 +52,11 @@ class Measures:
 
         return data
 
-    def __get_node(self, blob: pd.DataFrame) -> dict:
+    @staticmethod
+    def __get_node(blob: pd.DataFrame) -> dict:
         """
 
-        :param blob: 
+        :param blob:
         :return:
         """
 
