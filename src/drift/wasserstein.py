@@ -10,7 +10,7 @@ class Wasserstein:
     def __init__(self, period: int):
         """
 
-        :param period:
+        :param period: This is ...
         """
 
         self.__period = period
@@ -31,7 +31,7 @@ class Wasserstein:
     def exc(self, measure: np.ndarray):
         """
 
-        :param measure:
+        :param measure: measure = data['n_attendances'].values
         :return:
         """
 
