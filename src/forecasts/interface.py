@@ -13,6 +13,7 @@ import src.forecasts.parts
 import src.forecasts.seasonal
 import src.forecasts.trend
 import src.forecasts.measures
+import src.functions.directories
 
 
 class Interface:
@@ -55,17 +56,32 @@ class Interface:
 
         return codes
 
+    def __directories(self):
+        """
+
+        :return:
+        """
+
+        directories = src.functions.directories.Directories()
+
+        for section in ['forecasts', 'errors']:
+            self.__path = os.path.join(self.__configurations.warehouse, section)
+            directories.create(self.__path)
+
     def exc(self):
         """
 
         :return:
         """
 
-        codes = self.__get_codes()
+        # Ensure the storage directories exist; measures -> forecasts, metrics -> errors
+        self.__directories()
 
+        # Hence
+        codes = self.__get_codes()
         for code in codes:
             seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
             trend: pd.DataFrame = self.__trend.exc(code=code)
             parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
-            parts: pr.Parts = self.__measures.exc(parts=parts)
+            parts: pr.Parts = self.__measures.exc(parts=parts, code=code)
             self.__metrics.exc(parts=parts)
