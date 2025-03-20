@@ -12,18 +12,6 @@ class Metrics:
         pass
 
     @staticmethod
-    def __ape(data: pd.DataFrame):
-        """
-        This function calculates the q<sup>th</sup> percentile values per set of absolute error rates.
-
-        :param data:
-        :return:
-        """
-
-        aer = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
-        logging.info(100*np.percentile(a=aer, q=[10, 25, 50, 75, 90], axis=0))
-
-    @staticmethod
     def __root_mse(data: pd.DataFrame) -> pd.DataFrame:
         """
         This function calculates
