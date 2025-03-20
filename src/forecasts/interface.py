@@ -8,11 +8,11 @@ import pandas as pd
 import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
-import src.error.metrics
-import src.error.parts
-import src.error.seasonal
-import src.error.trend
-import src.error.measures
+import src.forecasts.metrics
+import src.forecasts.parts
+import src.forecasts.seasonal
+import src.forecasts.trend
+import src.forecasts.measures
 
 
 class Interface:
@@ -32,11 +32,11 @@ class Interface:
         self.__configurations = config.Config()
 
         # Instances
-        self.__seasonal = src.error.seasonal.Seasonal()
-        self.__trend = src.error.trend.Trend()
-        self.__parts = src.error.parts.Parts()
-        self.__measures = src.error.measures.Measures()
-        self.__metrics = src.error.metrics.Metrics()
+        self.__seasonal = src.forecasts.seasonal.Seasonal()
+        self.__trend = src.forecasts.trend.Trend()
+        self.__parts = src.forecasts.parts.Parts()
+        self.__measures = src.forecasts.measures.Measures()
+        self.__metrics = src.forecasts.metrics.Metrics()
 
     def __get_codes(self) -> list[str] | None:
         """
