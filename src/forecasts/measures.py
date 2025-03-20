@@ -21,7 +21,7 @@ class Measures:
         self.__configurations = config.Config()
         self.__path = os.path.join(self.__configurations.warehouse, 'forecasts')
 
-        # Instance for writing/reading JSON items.
+        # Instance for writing/reading JSON (JavaScript Object Notation) items.
         self.__objects = src.functions.objects.Objects()
 
         # Graphing fields; minimal is for futures parts, which do not include error measures because
