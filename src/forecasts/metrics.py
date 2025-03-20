@@ -39,8 +39,8 @@ class Metrics:
         :return:
         """
 
-        ner = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
-        tiles = np.percentile(a=ner, q=[10, 25, 50, 75, 90], axis=0)
+        er = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
+        tiles = np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0)
         frame = pd.DataFrame(data=100*tiles, columns=['l_e_metrics', 'u_e_metrics'],
                              index=['l_whisker', 'l_quarter', 'median', 'u_quarter', 'u_whisker'])
 
