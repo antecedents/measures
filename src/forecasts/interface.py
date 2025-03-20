@@ -84,4 +84,4 @@ class Interface:
             trend: pd.DataFrame = self.__trend.exc(code=code)
             parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
             parts: pr.Parts = self.__measures.exc(parts=parts, code=code)
-            self.__metrics.exc(parts=parts)
+            self.__metrics.exc(parts=parts, code=code)
