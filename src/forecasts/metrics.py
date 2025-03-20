@@ -31,7 +31,7 @@ class Metrics:
         return frame
 
     @staticmethod
-    def __npe(data: pd.DataFrame) -> pd.DataFrame:
+    def __pe(data: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param data:
@@ -54,4 +54,4 @@ class Metrics:
 
         data = parts.estimates
         self.__root_mse(data=data)
-        self.__npe(data=data)
+        self.__pe(data=data)
