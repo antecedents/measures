@@ -68,12 +68,12 @@ class Parts:
         :return: 
         """
 
-        data['u_estimate'] = self.__metric(
-            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
-            percentile=(0.5 + 0.5*self.__span))
         data['l_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
             percentile=(0.5 - 0.5*self.__span))
+        data['u_estimate'] = self.__metric(
+            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
+            percentile=(0.5 + 0.5*self.__span))
         
         return data
         
