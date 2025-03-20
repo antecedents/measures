@@ -24,10 +24,11 @@ class Metrics:
         """
 
         se: np.ndarray = np.power(data[['l_e_error', 'u_e_error']].to_numpy(), 2)
-        mse = np.expand_dims(
+        mse: np.ndarray = np.expand_dims(
             np.sum(se, axis=0)/se.shape[0], axis=0)
 
-        frame = pd.DataFrame(data=np.sqrt(mse), columns=['l_e_metrics', 'u_e_metrics'], index=['r_mse'])
+        frame = pd.DataFrame(data=np.sqrt(mse),
+                             columns=['l_e_metrics', 'u_e_metrics'], index=['r_mse'])
 
         return frame
 
@@ -39,8 +40,8 @@ class Metrics:
         :return:
         """
 
-        er = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
-        tiles = np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0)
+        er: np.ndarray = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
+        tiles: np.ndarray = np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0)
         frame = pd.DataFrame(data=100*tiles, columns=['l_e_metrics', 'u_e_metrics'],
                              index=['l_whisker', 'l_quarter', 'median', 'u_quarter', 'u_whisker'])
 
