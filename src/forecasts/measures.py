@@ -1,4 +1,5 @@
 """Module measures.py"""
+import logging
 import numpy as np
 import pandas as pd
 
@@ -42,5 +43,9 @@ class Measures:
 
         parts = parts._replace(estimates=self.__errors(data=parts.estimates.copy()),
                        tests=self.__errors(data=parts.tests.copy()))
+
+        logging.info(parts.estimates.head())
+        logging.info(parts.tests.head())
+        logging.info(parts.futures.head())
 
         return parts
