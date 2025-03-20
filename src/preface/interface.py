@@ -53,6 +53,6 @@ class Interface:
             connector=connector, region_name=s3_parameters.region_name).exc()
         arguments: dict = self.__get_arguments(connector=connector)
 
-        self.__setting_up(service=service, s3_parameters=s3_parameters)
+        # self.__setting_up(service=service, s3_parameters=s3_parameters)
 
         return connector, s3_parameters, service, arguments
