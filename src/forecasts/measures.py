@@ -1,21 +1,35 @@
 """Module measures.py"""
 import logging
+import os
 
 import numpy as np
 import pandas as pd
 
 import src.elements.parts as pr
+import config
+
+import src.functions.objects
 
 
 class Measures:
 
     def __init__(self):
-        pass
+        """
+
+        """
+
+        self.__configurations = config.Config()
+        self.__objects = src.functions.objects.Objects()
+
+        self.__path = os.path.join(self.__configurations.warehouse, 'forecasts')
+
+        self.__reference = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
+                            'l_e_error_rate', 'u_e_error_rate']
+        self.__minimal = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate']
 
     @staticmethod
     def __errors(data: pd.DataFrame) -> pd.DataFrame:
         """
-        errors.sort(axis=1)
 
         :param data: The forecasts w.r.t. training or testing phases.
         :return:
@@ -27,26 +41,44 @@ class Measures:
         # forecasts
         forecasts = data[['l_estimate', 'u_estimate']].to_numpy()
 
-        # raw errors and error rates
-        errors: np.ndarray =  ground - forecasts
+        # raw errors and error rates; negative/lower, positive/higher
+        errors: np.ndarray =  forecasts - ground
         data.loc[:, ['l_e_error', 'u_e_error']] = errors
         data.loc[:, ['l_e_error_rate', 'u_e_error_rate']] = np.true_divide(errors, ground)
 
         return data
 
-    def exc(self, parts: pr.Parts) -> pr.Parts:
+    def __persist(self, parts: pr.Parts, code: str):
         """
 
         :param parts: An institution's data object consisting of forecasts w.r.t. training,
-                      testing, and futures phases.
+                      testing, and futures phases; <b>alongside error measures</b>.<br>
+        :param code:
+        :return:
+        """
+
+        nodes = {
+            'estimates': parts.estimates[self.__reference].to_dict(orient='tight'),
+            'tests': parts.tests[self.__reference].to_dict(orient='tight'),
+            'futures': parts.futures[self.__minimal].to_dict(orient='tight')}
+
+        message = self.__objects.write(
+            nodes=nodes,
+            path=os.path.join(self.__path, f'{code}.json'))
+
+        logging.info('Forecasts Values & Measures -> %s', message)
+
+    def exc(self, parts: pr.Parts, code: str) -> pr.Parts:
+        """
+
+        :param parts: An institution's data object consisting of forecasts w.r.t. training,
+                      testing, and futures phases.<br>
+        :param code: An institution's identification code.
         :return:
         """
 
         parts = parts._replace(estimates=self.__errors(data=parts.estimates.copy()),
                        tests=self.__errors(data=parts.tests.copy()))
-
-        logging.info(parts.estimates.head())
-        logging.info(parts.tests.head())
-        logging.info(parts.futures.head())
+        self.__persist(parts=parts, code=code)
 
         return parts
