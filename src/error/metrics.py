@@ -58,3 +58,6 @@ class Metrics:
         self.__root_mse(data=data)
         self.__average_percentage(data=data)
         self.__median_percentage(data=data)
+
+        er = np.absolute(data[['l_error_rate', 'u_error_rate']].to_numpy())
+        logging.info(np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0))
