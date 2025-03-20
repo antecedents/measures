@@ -17,9 +17,9 @@ def main():
 
     # Steps
     # src.data.interface.Interface(s3_parameters=s3_parameters).exc()
-    src.decompositions.interface.Interface().exc()
-    src.error.interface.Interface().exc()
-    src.drift.interface.Interface(arguments=arguments).exc()
+    # src.decompositions.interface.Interface().exc()
+    # src.error.interface.Interface(arguments=arguments).exc()
+    # src.drift.interface.Interface(arguments=arguments).exc()
 
     # Delete cache
     src.functions.cache.Cache().exc()
