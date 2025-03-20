@@ -1,6 +1,7 @@
 """Module measures.py"""
 import logging
 import os
+import json
 
 import numpy as np
 import pandas as pd
@@ -51,23 +52,27 @@ class Measures:
 
         return data
 
-    def __persist(self, parts: pr.Parts, code: str):
+    def __get_node(self, blob: pd.DataFrame) -> dict:
         """
 
-        :param parts: An institution's data object consisting of forecasts w.r.t. training,
+        :param blob: 
+        :return:
+        """
+
+        string: str = blob.to_json(orient='split')
+
+        return json.loads(string)
+
+    def __persist(self, nodes: dict, code: str):
+        """
+
+        :param nodes: An institution's data dictionary consisting of forecasts w.r.t. training,
                       testing, and futures parts; <b>alongside error measures</b>.<br>
         :param code: An institution's identification code.<br>
         :return:
         """
 
-        nodes = {
-            'estimates': parts.estimates[self.__reference].to_dict(orient='tight'),
-            'tests': parts.tests[self.__reference].to_dict(orient='tight'),
-            'futures': parts.futures[self.__minimal].to_dict(orient='tight')}
-
-        message = self.__objects.write(
-            nodes=nodes,
-            path=os.path.join(self.__path, f'{code}.json'))
+        message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{code}.json'))
 
         logging.info('Forecasts Values & Measures -> %s', message)
 
@@ -82,6 +87,11 @@ class Measures:
 
         parts = parts._replace(estimates=self.__errors(data=parts.estimates.copy()),
                        tests=self.__errors(data=parts.tests.copy()))
-        self.__persist(parts=parts, code=code)
+
+        nodes = {
+            'estimates': self.__get_node(parts.estimates[self.__reference]),
+            'tests': self.__get_node(parts.tests[self.__reference]),
+            'futures': self.__get_node(parts.futures[self.__minimal])}
+        self.__persist(nodes=nodes, code=code)
 
         return parts
