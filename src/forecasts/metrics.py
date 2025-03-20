@@ -1,16 +1,27 @@
 """Module metrics.py"""
 import logging
+import os
+import json
 
 import numpy as np
 import pandas as pd
 
+import config
 import src.elements.parts as pr
+import src.functions.objects
 
 
 class Metrics:
 
     def __init__(self):
-        pass
+        """
+        Constructor
+        """
+
+        self.__configurations = config.Config()
+        self.__path = os.path.join(self.__configurations.warehouse, 'errors')
+
+        self.__objects = src.functions.objects.Objects()
 
     @staticmethod
     def __root_mse(data: pd.DataFrame) -> pd.DataFrame:
@@ -47,7 +58,7 @@ class Metrics:
 
         return frame
 
-    def __get_metrics(self, data: pd.DataFrame):
+    def __get_metrics(self, data: pd.DataFrame) -> dict:
         """
 
         :param data:
@@ -56,13 +67,15 @@ class Metrics:
 
         frame = pd.concat((self.__root_mse(data=data), self.__pe(data=data)),
                           axis=0, ignore_index=False)
+        string = frame.to_json(orient='split')
 
-        return frame.to_dict(orient='tight')
+        return json.loads(string)
 
-    def exc(self, parts: pr.Parts):
+    def exc(self, parts: pr.Parts, code: str):
         """
 
         :param parts:
+        :param code:
         :return:
         """
 
@@ -70,5 +83,7 @@ class Metrics:
             'estimates': self.__get_metrics(data=parts.estimates),
             'tests': self.__get_metrics(data=parts.tests)
         }
-
         logging.info(nodes)
+
+        message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{code}.json'))
+        logging.info('Forecasts Metrics -> %s', message)
