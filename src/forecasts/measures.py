@@ -23,6 +23,7 @@ class Measures:
 
         self.__path = os.path.join(self.__configurations.warehouse, 'forecasts')
 
+        # Graphing fields; minimal is for
         self.__reference = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
                             'l_e_error_rate', 'u_e_error_rate']
         self.__minimal = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate']
@@ -52,7 +53,7 @@ class Measures:
         """
 
         :param parts: An institution's data object consisting of forecasts w.r.t. training,
-                      testing, and futures phases; <b>alongside error measures</b>.<br>
+                      testing, and futures parts; <b>alongside error measures</b>.<br>
         :param code: An institution's identification code.<br>
         :return:
         """
