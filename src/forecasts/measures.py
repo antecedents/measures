@@ -23,7 +23,8 @@ class Measures:
 
         self.__path = os.path.join(self.__configurations.warehouse, 'forecasts')
 
-        # Graphing fields; minimal is for
+        # Graphing fields; minimal is for futures parts, which do not include error measures because
+        # their true values are yet unknown.
         self.__reference = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
                             'l_e_error_rate', 'u_e_error_rate']
         self.__minimal = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate']
