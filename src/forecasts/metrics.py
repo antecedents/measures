@@ -81,8 +81,7 @@ class Metrics:
 
         nodes = {
             'estimates': self.__get_metrics(data=parts.estimates),
-            'tests': self.__get_metrics(data=parts.tests)
-        }
+            'tests': self.__get_metrics(data=parts.tests)}
         logging.info(nodes)
 
         message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{code}.json'))
