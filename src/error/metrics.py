@@ -1,6 +1,7 @@
 import logging
 
 import numpy as np
+import pandas as pd
 
 import src.elements.parts as pr
 
@@ -11,28 +12,40 @@ class Metrics:
         pass
 
     @staticmethod
-    def __root_mse(references: np.ndarray, forecasts: np.ndarray):
+    def __root_mse(data: pd.DataFrame):
         """
-        
-        :param references:
-        :param forecasts:
+        Root of the mean (of the square of the error per point); lower & upper boundary
+
+        :param data:
         :return:
         """
 
-        sqe: np.ndarray = np.power(references - forecasts, 2)
-        logging.info(sqe)
-
-        mse: float = sum(sqe)/sqe.shape[0]
-        logging.info(mse)
-
+        se: np.ndarray = np.power(data[['l_error', 'u_error']].to_numpy(), 2)
+        mse = np.sum(se, axis=0)/se.shape[0]
         logging.info(np.sqrt(mse))
 
-    def __percentage(self):
+    @staticmethod
+    def __average_percentage(data: pd.DataFrame):
         """
-        100*sum(abs(error./original))/N <- mean absolute percentage error
+        The average of the (percentage absolute error rate per point)
 
         :return:
         """
+
+        er = np.absolute(data[['l_error_rate', 'u_error_rate']].to_numpy())
+        mer = np.sum(er, axis=0)/er.shape[0]
+        logging.info(100*mer)
+
+    @staticmethod
+    def __median_percentage(data: pd.DataFrame):
+        """
+
+        :param data:
+        :return:
+        """
+
+        er = np.absolute(data[['l_error_rate', 'u_error_rate']].to_numpy())
+        logging.info(100*np.median(er, axis=0))
 
     def exc(self, parts: pr.Parts):
         """
@@ -41,4 +54,7 @@ class Metrics:
         :return:
         """
 
-        self.__root_mse(references=parts.estimates['n_attendances'], forecasts=parts.estimates['l_estimate'])
+        data = parts.estimates
+        self.__root_mse(data=data)
+        self.__average_percentage(data=data)
+        self.__median_percentage(data=data)
