@@ -12,17 +12,6 @@ class Metrics:
         pass
 
     @staticmethod
-    def __mean_ape(data: pd.DataFrame):
-        """
-        The mean of the (absolute error rate per point) values; percentage.
-
-        :return:
-        """
-
-        er = np.absolute(data[['l_e_error_rate', 'u_e_error_rate']].to_numpy())
-        logging.info(100*np.sum(er, axis=0)/er.shape[0])
-
-    @staticmethod
     def __ape(data: pd.DataFrame):
         """
         This function calculates the q<sup>th</sup> percentile values per set of absolute error rates.
