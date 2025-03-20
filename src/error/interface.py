@@ -12,6 +12,7 @@ import src.error.metrics
 import src.error.parts
 import src.error.seasonal
 import src.error.trend
+import src.error.measures
 
 
 class Interface:
@@ -34,6 +35,7 @@ class Interface:
         self.__seasonal = src.error.seasonal.Seasonal()
         self.__trend = src.error.trend.Trend()
         self.__parts = src.error.parts.Parts()
+        self.__measures = src.error.measures.Measures()
         self.__metrics = src.error.metrics.Metrics()
 
     def __get_codes(self) -> list[str] | None:
@@ -65,4 +67,5 @@ class Interface:
             seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
             trend: pd.DataFrame = self.__trend.exc(code=code)
             parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
+            parts: pr.Parts = self.__measures.exc(parts=parts)
             self.__metrics.exc(parts=parts)
