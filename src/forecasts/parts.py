@@ -23,7 +23,7 @@ class Parts:
         self.__span = 0.90
 
         # The fields in focus, and descriptive names
-        self.__fields = ['week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
+        self.__fields = ['milliseconds', 'week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
         self.__rename = {'seasonal_est': 'sc_estimate', 'mu': 'tc_estimate',
                          'std': 'tc_estimate_deviation'}
 
