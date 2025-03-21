@@ -19,9 +19,9 @@ class Metrics:
         logging.info(scores)
 
 
-    def __get_wasserstein(self, x: np.ndarray, y: np.ndarray):
+    def __get_wasserstein(self, x: np.ndarray, y: np.ndarray) -> float:
 
-        logging.info(sta.wasserstein_distance(x, y))
+        return sta.wasserstein_distance(x, y).__float__()
 
     def exc(self, matrix: np.ndarray) -> tuple:
         """
