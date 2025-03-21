@@ -13,7 +13,7 @@ class Metrics:
         pass
 
     @staticmethod
-    def __get_js(penultimate: np.ndarray, ultimate: np.ndarray):
+    def __get_js(penultimate: np.ndarray, ultimate: np.ndarray) -> np.ndarray | float:
         """
 
         :param penultimate:
