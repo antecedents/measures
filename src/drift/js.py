@@ -1,6 +1,7 @@
 import logging
 
 import numpy as np
+import scipy.spatial as sp
 
 
 class JS:
@@ -19,7 +20,10 @@ class JS:
         ultimate = matrix[:-1, :]
         penultimate = matrix[1:, :]
 
-        logging.info('\n\n%s\n%s\n%s\n', matrix, ultimate, np.fliplr(ultimate))
-        logging.info('\n\n%s\n%s\n%s\n', matrix, penultimate, np.fliplr(penultimate))
+        ultimate = np.fliplr(ultimate)
+        penultimate = np.fliplr(penultimate)
+
+        scores = sp.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
+        logging.info(scores)
 
         return matrix.shape
