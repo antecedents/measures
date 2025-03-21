@@ -12,16 +12,15 @@ class Metrics:
         pass
 
     @staticmethod
-    def __get_js(penultimate, ultimate):
+    def __get_js(penultimate: np.ndarray, ultimate: np.ndarray):
 
         # noinspection PyArgumentList
-        scores = spa.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
-        logging.info(scores)
+        return spa.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
 
+    @staticmethod
+    def __get_wasserstein(penultimate: np.ndarray, ultimate: np.ndarray) -> float:
 
-    def __get_wasserstein(self, x: np.ndarray, y: np.ndarray) -> float:
-
-        return sta.wasserstein_distance(x, y).__float__()
+        return sta.wasserstein_distance(penultimate, ultimate).__float__()
 
     def exc(self, matrix: np.ndarray) -> tuple:
         """
@@ -36,10 +35,11 @@ class Metrics:
         ultimate = np.fliplr(ultimate)
         penultimate = np.fliplr(penultimate)
 
-        self.__get_js(penultimate=penultimate, ultimate=ultimate)
+        js = self.__get_js(penultimate=penultimate, ultimate=ultimate)
+        logging.info(len(js))
 
-        scores = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
-        logging.info(scores)
+        wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
+        logging.info(type(wasserstein))
 
 
         return matrix.shape
