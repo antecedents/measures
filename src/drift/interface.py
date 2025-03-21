@@ -1,6 +1,5 @@
 import datetime
 import glob
-import logging
 import os
 
 import pandas as pd
@@ -32,19 +31,6 @@ class Interface:
         self.__boundary = datetime.datetime.strptime(
             self.__arguments.get('boundary'), '%Y-%m-%d')
 
-    def __divergence(self, data: pd.DataFrame):
-        """
-
-        :param data:
-        :return:
-        """
-
-        measure = data['n_attendances'].values
-
-        instance = src.drift.wasserstein.Wasserstein(period=self.__period)
-
-        return instance.exc(measure=measure)
-
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
 
@@ -71,6 +57,3 @@ class Interface:
 
             data = self.__get_data(uri=listing)
             data.info()
-
-            scores = self.__divergence(data=data)
-            logging.info(scores)
