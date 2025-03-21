@@ -73,5 +73,7 @@ class Metrics:
         frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein, 'date': dates})
 
         logging.info(frame.head())
+        codes = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze()
+        logging.info(codes)
 
         return matrix.shape
