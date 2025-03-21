@@ -22,12 +22,10 @@ class Interface:
         :param arguments:
         """
 
+        self.__arguments = arguments
+
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
-
-        self.__arguments = arguments
-        self.__boundary = datetime.datetime.strptime(
-            self.__arguments.get('boundary'), '%Y-%m-%d')
 
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
@@ -42,7 +40,7 @@ class Interface:
         frame['week_ending_date'] = pd.to_datetime(
             frame['week_ending_date'].astype(str), errors='coerce', format='%Y-%m-%d')
 
-        return frame.copy().loc[frame['week_ending_date'] >= self.__boundary, : ]
+        return frame
 
     def exc(self):
         """
