@@ -1,6 +1,8 @@
 import logging
 import typing
 
+import json
+
 import numpy as np
 import pandas as pd
 import scipy.spatial as spa
@@ -54,6 +56,23 @@ class Metrics:
 
         return np.fliplr(penultimate), np.fliplr(ultimate)
 
+    @staticmethod
+    def __get_dictionary(frame: pd.DataFrame, code: pd.Series):
+        """
+
+        :param frame:
+        :param code:
+        :return:
+        """
+
+        string: str = frame.to_json(orient='split')
+        dictionary: dict = json.loads(string)
+
+        dictionary['health_board_code'] = code.health_board_code
+        dictionary['hospital_code'] = code.hospital_code
+
+        return dictionary
+
     def exc(self, matrix: np.ndarray, data: pd.DataFrame) -> tuple:
         """
 
@@ -72,8 +91,9 @@ class Metrics:
             start=data['week_ending_date'].max(), periods=js.shape[0], freq='-1' + self.__arguments.get('frequency'))
         frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein, 'date': dates})
 
-        logging.info(frame.head())
-        codes = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze()
-        logging.info(codes)
+        # Dictionary
+        dictionary = self.__get_dictionary(
+            frame=frame, code = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze())
+        logging.info(dictionary)
 
         return matrix.shape
