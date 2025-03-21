@@ -62,4 +62,7 @@ class Metrics:
         wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
         logging.info('SCORES: %s, %s', js.shape, len(wasserstein))
 
+        frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein})
+        logging.info(frame.head())
+
         return matrix.shape
