@@ -5,7 +5,6 @@ import os
 import pandas as pd
 
 import config
-import src.drift.wasserstein
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -27,7 +26,6 @@ class Interface:
         self.__streams = src.functions.streams.Streams()
 
         self.__arguments = arguments
-        self.__period = self.__arguments.get('seasons')
         self.__boundary = datetime.datetime.strptime(
             self.__arguments.get('boundary'), '%Y-%m-%d')
 
@@ -53,7 +51,6 @@ class Interface:
         """
 
         listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
-        for listing in listings[:1]:
-
+        for listing in listings:
             data = self.__get_data(uri=listing)
             data.info()
