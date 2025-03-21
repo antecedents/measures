@@ -9,8 +9,13 @@ import scipy.stats as sta
 
 class Metrics:
 
-    def __init__(self):
-        pass
+    def __init__(self, arguments: dict):
+        """
+
+        :param arguments:
+        """
+
+        self.__arguments = arguments
 
     @staticmethod
     def __get_js(penultimate: np.ndarray, ultimate: np.ndarray) -> np.ndarray | float:
@@ -57,8 +62,6 @@ class Metrics:
         :return:
         """
 
-        logging.info('DATA: %s, %s', data.shape, data['week_ending_date'].max())
-
         # Matrices
         penultimate, ultimate = self.__get_matrices(matrix=matrix)
 
@@ -67,5 +70,9 @@ class Metrics:
         wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
         frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein})
         logging.info(frame.head())
+
+        dates = pd.date_range(
+            end=data['week_ending_date'].max(), periods=js.shape[0], freq=self.__arguments.get('frequency'))
+        logging.info('dates: %s, %s\n%s', dates.shape, data['week_ending_date'].max(), dates)
 
         return matrix.shape
