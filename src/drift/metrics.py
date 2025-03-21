@@ -1,7 +1,9 @@
 import logging
 
 import numpy as np
-import scipy.spatial as sp
+import pandas as pd
+import scipy.spatial as spa
+import scipy.stats as sta
 
 
 class Metrics:
@@ -13,8 +15,13 @@ class Metrics:
     def __get_js(penultimate, ultimate):
 
         # noinspection PyArgumentList
-        scores = sp.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
+        scores = spa.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
         logging.info(scores)
+
+
+    def __get_wasserstein(self, x: np.ndarray, y: np.ndarray):
+
+        logging.info(sta.wasserstein_distance(x, y))
 
     def exc(self, matrix: np.ndarray) -> tuple:
         """
@@ -30,5 +37,9 @@ class Metrics:
         penultimate = np.fliplr(penultimate)
 
         self.__get_js(penultimate=penultimate, ultimate=ultimate)
+
+        scores = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
+        logging.info(scores)
+
 
         return matrix.shape
