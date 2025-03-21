@@ -1,9 +1,16 @@
-
+"""Module hankel.py"""
 import numpy as np
 import pandas as pd
 import scipy.linalg as li
 
+
 class Hankel:
+    """
+    <b>Notes</b><br>
+    -----<br>
+
+    For an institution, this class creates a hankel matrix of attendance numbers.
+    """
 
     def __init__(self, arguments: dict):
         """
@@ -30,4 +37,3 @@ class Hankel:
             reverse[(self.__arguments.get('seasons') - 1):]).T
 
         return matrix
-
