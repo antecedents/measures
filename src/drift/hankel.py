@@ -38,6 +38,4 @@ class Hankel:
             reverse[:self.__arguments.get('seasons')],
             reverse[(self.__arguments.get('seasons') - 1):]).T
 
-        logging.info(matrix)
-
         return matrix
