@@ -1,10 +1,13 @@
-import datetime
+import logging
 import glob
 import os
 
+import dask
 import pandas as pd
 
 import config
+import src.drift.hankel
+import src.drift.js
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -24,13 +27,15 @@ class Interface:
 
         self.__arguments = arguments
 
+        # Instances
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
 
+    @dask.delayed
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
 
-        :param uri:
+        :param uri: The uniform resource identifier of an institution's raw attendances data
         :return:
         """
 
@@ -48,7 +53,17 @@ class Interface:
         :return:
         """
 
-        listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
+        listings = glob.glob(
+            pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
+
+        hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
+        js = dask.delayed(src.drift.js.JS().exc)
+
+        computations = []
         for listing in listings:
             data = self.__get_data(uri=listing)
-            data.info()
+            matrix = hankel(data=data)
+            shapes = js(matrix=matrix)
+            computations.append(shapes)
+        calculations = dask.compute(computations, scheduler='threads')[0]
+        logging.info(calculations)
