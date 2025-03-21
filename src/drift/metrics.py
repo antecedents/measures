@@ -49,12 +49,15 @@ class Metrics:
 
         return np.fliplr(penultimate), np.fliplr(ultimate)
 
-    def exc(self, matrix: np.ndarray) -> tuple:
+    def exc(self, matrix: np.ndarray, data: pd.DataFrame) -> tuple:
         """
 
         :param matrix:
+        :param data:
         :return:
         """
+
+        logging.info('DATA: %s, %s', data.shape, data['week_ending_date'].max())
 
         penultimate, ultimate = self.__get_matrices(matrix=matrix)
 
