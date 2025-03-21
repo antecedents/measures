@@ -1,4 +1,6 @@
 """Module hankel.py"""
+import logging
+
 import numpy as np
 import pandas as pd
 import scipy.linalg as li
@@ -35,5 +37,7 @@ class Hankel:
         matrix: np.ndarray = li.hankel(
             reverse[:self.__arguments.get('seasons')],
             reverse[(self.__arguments.get('seasons') - 1):]).T
+
+        logging.info(matrix)
 
         return matrix
