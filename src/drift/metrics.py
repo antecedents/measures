@@ -59,12 +59,12 @@ class Metrics:
 
         logging.info('DATA: %s, %s', data.shape, data['week_ending_date'].max())
 
+        # Matrices
         penultimate, ultimate = self.__get_matrices(matrix=matrix)
 
+        # Scores
         js = self.__get_js(penultimate=penultimate, ultimate=ultimate)
         wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
-        logging.info('SCORES: %s, %s', js.shape, len(wasserstein))
-
         frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein})
         logging.info(frame.head())
 
