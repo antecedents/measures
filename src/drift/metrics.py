@@ -68,11 +68,10 @@ class Metrics:
         # Scores
         js = self.__get_js(penultimate=penultimate, ultimate=ultimate)
         wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
-        frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein})
-        logging.info(frame.head())
-
         dates = pd.date_range(
-            end=data['week_ending_date'].max(), periods=js.shape[0], freq=self.__arguments.get('frequency'))
-        logging.info('dates: %s, %s\n%s', dates.shape, data['week_ending_date'].max(), dates)
+            start=data['week_ending_date'].max(), periods=js.shape[0], freq='-1' + self.__arguments.get('frequency'))
+        frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein, 'date': dates})
+
+        logging.info(frame.head())
 
         return matrix.shape
