@@ -2,7 +2,6 @@ import logging
 
 import numpy as np
 import scipy.stats as sta
-import scipy.spatial as spa
 
 
 class Wasserstein:
@@ -35,7 +34,7 @@ class Wasserstein:
         :return:
         """
 
-        # For later test unit
+        # For a later test unit
         logging.info(sta.wasserstein_distance(measure[:52], measure[:52]))
         logging.info(sta.wasserstein_distance(measure[:52], measure[52:104]))
 
