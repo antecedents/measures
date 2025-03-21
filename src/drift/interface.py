@@ -7,7 +7,7 @@ import pandas as pd
 
 import config
 import src.drift.hankel
-import src.drift.js
+import src.drift.metrics
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -57,13 +57,13 @@ class Interface:
             pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
 
         hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
-        js = dask.delayed(src.drift.js.JS().exc)
+        metrics = dask.delayed(src.drift.metrics.Metrics().exc)
 
         computations = []
         for listing in listings:
             data = self.__get_data(uri=listing)
             matrix = hankel(data=data)
-            shapes = js(matrix=matrix)
+            shapes = metrics(matrix=matrix)
             computations.append(shapes)
         calculations = dask.compute(computations, scheduler='threads')[0]
         logging.info(calculations)
