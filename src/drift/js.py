@@ -1,17 +1,21 @@
+import logging
+
+import numpy as np
+
 
 class JS:
 
     def __init__(self):
+        pass
+
+    @staticmethod
+    def exc(matrix: np.ndarray):
         """
 
-        """
-
-    def exc(self):
-        """
-        n_of_cycle=52
-        points=excerpt["n_attendances"].to_numpy()
-        reverse = points[::-1]
-        li.hankel(reverse[:n_of_cycle], reverse[(n_of_cycle - 1):]).T
-
+        :param matrix:
         :return:
         """
+
+        logging.info(type(matrix.shape))
+
+        return matrix.shape
