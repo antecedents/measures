@@ -9,13 +9,14 @@ class Metrics:
     def __init__(self):
         pass
 
-    def __get_js(self, penultimate, ultimate):
+    @staticmethod
+    def __get_js(penultimate, ultimate):
 
+        # noinspection PyArgumentList
         scores = sp.distance.jensenshannon(p=penultimate, q=ultimate, axis=1)
         logging.info(scores)
 
-    @staticmethod
-    def exc(matrix: np.ndarray) -> tuple:
+    def exc(self, matrix: np.ndarray) -> tuple:
         """
 
         :param matrix:
@@ -28,6 +29,6 @@ class Metrics:
         ultimate = np.fliplr(ultimate)
         penultimate = np.fliplr(penultimate)
 
-
+        self.__get_js(penultimate=penultimate, ultimate=ultimate)
 
         return matrix.shape
