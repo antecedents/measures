@@ -60,6 +60,6 @@ class Metrics:
 
         js = self.__get_js(penultimate=penultimate, ultimate=ultimate)
         wasserstein = [self.__get_wasserstein(penultimate[i,:], ultimate[i,:]) for i in np.arange(ultimate.shape[0])]
-        logging.info('SCORES: %s, %s', type(js), type(wasserstein))
+        logging.info('SCORES: %s, %s', js.shape, len(wasserstein))
 
         return matrix.shape
