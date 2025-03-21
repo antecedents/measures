@@ -63,7 +63,7 @@ class Interface:
         for listing in listings:
             data = self.__get_data(uri=listing)
             matrix = hankel(data=data)
-            shapes = metrics(matrix=matrix)
+            shapes = metrics(matrix=matrix, data=data)
             computations.append(shapes)
         calculations = dask.compute(computations, scheduler='threads')[0]
         logging.info(calculations)
