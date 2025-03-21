@@ -4,7 +4,7 @@ import numpy as np
 import scipy.spatial as sp
 
 
-class JS:
+class Metrics:
 
     def __init__(self):
         pass
