@@ -57,7 +57,7 @@ class Interface:
             pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
 
         hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
-        metrics = dask.delayed(src.drift.metrics.Metrics().exc)
+        metrics = dask.delayed(src.drift.metrics.Metrics(arguments=self.__arguments).exc)
 
         computations = []
         for listing in listings:
