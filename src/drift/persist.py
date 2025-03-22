@@ -11,6 +11,12 @@ import src.functions.directories
 
 
 class Persist:
+    """
+    <b>Notes</b><br>
+    -------<br>
+
+    Structures and saves each institution's drift data.
+    """
 
     def __init__(self):
         """
