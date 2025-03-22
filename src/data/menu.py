@@ -1,6 +1,5 @@
 """Module menu.py"""
 import glob
-import logging
 import os
 
 import pandas as pd
@@ -10,6 +9,9 @@ import src.functions.objects
 
 
 class Menu:
+    """
+    Menu
+    """
 
     def __init__(self):
         """
