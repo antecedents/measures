@@ -25,7 +25,7 @@ class Persist:
         self.__configurations = config.Config()
         self.__objects = src.functions.objects.Objects()
 
-        self.__path = os.path.join(self.__configurations.warehouse, 'decompositions')
+        self.__path = os.path.join(self.__configurations.points_, 'decompositions')
         src.functions.directories.Directories().create(self.__path)
 
         # Fields in focus
