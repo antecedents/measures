@@ -1,7 +1,4 @@
-import logging
 import typing
-
-import json
 
 import numpy as np
 import pandas as pd
@@ -57,23 +54,20 @@ class Metrics:
         return np.fliplr(penultimate), np.fliplr(ultimate)
 
     @staticmethod
-    def __get_dictionary(frame: pd.DataFrame, code: pd.Series):
+    def __milliseconds(blob: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param frame:
-        :param code:
+        :param blob:
         :return:
         """
 
-        string: str = frame.to_json(orient='split')
-        dictionary: dict = json.loads(string)
+        frame = blob.copy()
+        frame['milliseconds']  = (frame['date'].to_numpy().astype(np.int64) / (10 ** 6)).astype(np.longlong)
+        frame.sort_values(by='date', inplace=True)
 
-        dictionary['health_board_code'] = code.health_board_code
-        dictionary['hospital_code'] = code.hospital_code
+        return frame
 
-        return dictionary
-
-    def exc(self, matrix: np.ndarray, data: pd.DataFrame) -> tuple:
+    def exc(self, matrix: np.ndarray, data: pd.DataFrame) -> pd.DataFrame:
         """
 
         :param matrix:
@@ -91,9 +85,9 @@ class Metrics:
             start=data['week_ending_date'].max(), periods=js.shape[0], freq='-1' + self.__arguments.get('frequency'))
         frame = pd.DataFrame(data={'js': js, 'wasserstein': wasserstein, 'date': dates})
 
-        # Dictionary
-        dictionary = self.__get_dictionary(
-            frame=frame, code = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze())
-        logging.info(dictionary)
+        # Temporary
+        code = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze()
+        frame['health_board_code'] = code.health_board_code
+        frame['hospital_code'] = code.hospital_code
 
-        return matrix.shape
+        return self.__milliseconds(blob=frame)
