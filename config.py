@@ -38,6 +38,9 @@ class Config:
         self.data_ = os.path.join(os.getcwd(), 'data')
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
 
+        self.points_ = os.path.join(self.warehouse, 'points')
+        self.menu_ = os.path.join(self.warehouse, 'menu')
+
         # Configuration files
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.metadata_ = 'metadata'
+        self.metadata_ = 'external/metadata'
