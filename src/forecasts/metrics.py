@@ -19,7 +19,7 @@ class Metrics:
         """
 
         self.__configurations = config.Config()
-        self.__path = os.path.join(self.__configurations.warehouse, 'errors')
+        self.__path = os.path.join(self.__configurations.points_, 'errors')
 
         self.__objects = src.functions.objects.Objects()
 
