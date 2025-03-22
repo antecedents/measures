@@ -1,13 +1,12 @@
 """Module persist.py"""
-import logging
-import os
-import numpy as np
-import pandas as pd
 import json
+import os
+
+import pandas as pd
 
 import config
-import src.functions.objects
 import src.functions.directories
+import src.functions.objects
 
 
 class Persist:
