@@ -1,10 +1,15 @@
-import logging
+"""Module reference.py"""
+import pandas as pd
+
 import src.elements.s3_parameters as s3p
-import src.functions.streams
 import src.elements.text_attributes as txa
+import src.functions.streams
 
 
 class References:
+    """
+    Reference
+    """
 
     def __init__(self, s3_parameters: s3p.S3Parameters):
         """
@@ -41,8 +46,10 @@ class References:
 
         return self.__stream.read(text=text)
 
-    def exc(self):
+    def exc(self) -> pd.DataFrame:
         """
+        line = reference.loc[reference['hospital_code'] == '...', :]
+        logging.info(line.squeeze())
 
         :return:
         """
@@ -51,7 +58,4 @@ class References:
         institutions = self.__institutions()
         reference = institutions.merge(boards, on='health_board_code', how='left')
 
-        logging.info(reference)
-
-        line = reference.loc[reference['hospital_code'] == 'A111H', :]
-        logging.info(line.squeeze())
+        return reference
