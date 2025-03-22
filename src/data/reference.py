@@ -14,6 +14,7 @@ class References:
         """
 
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
+        self.__endpoint = 's3://' + self.__s3_parameters.internal + '/' + 'references' + '/'
 
         # An instance for reading & writing CSV (comma-separated values) data
         self.__stream = src.functions.streams.Streams()
@@ -24,7 +25,7 @@ class References:
         :return:
         """
 
-        uri = 's3://' + self.__s3_parameters.internal + '/' + 'references' + '/' + 'boards.csv'
+        uri = self.__endpoint + 'boards.csv'
         text = txa.TextAttributes(uri=uri, header=0, usecols=['health_board_code', 'health_board_name'])
 
         return self.__stream.read(text=text)
@@ -35,7 +36,7 @@ class References:
         :return:
         """
 
-        uri = 's3://' + self.__s3_parameters.internal + '/' + 'references' + '/' + 'institutions.csv'
+        uri = self.__endpoint + 'institutions.csv'
         text = txa.TextAttributes(uri=uri, header=0, usecols=['health_board_code', 'hospital_code', 'hospital_name'])
 
         return self.__stream.read(text=text)
@@ -51,3 +52,6 @@ class References:
         reference = institutions.merge(boards, on='health_board_code', how='left')
 
         logging.info(reference)
+
+        line = reference.loc[reference['hospital_code'] == 'A111H', :]
+        logging.info(line.squeeze())
