@@ -55,6 +55,6 @@ class Persist:
         dictionary = self.__get_dictionary(frame=frame)
 
         message = self.__objects.write(
-            nodes=dictionary, path=os.path.join(self.__path, f'{code}'))
+            nodes=dictionary, path=os.path.join(self.__path, f'{code}.json'))
 
         return message
