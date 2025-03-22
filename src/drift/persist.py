@@ -14,11 +14,14 @@ class Persist:
 
     def __init__(self):
         """
+        Beware, .to_json() will automatically convert the values of a datetime64[] field
+        to milliseconds epoch, therefore <milliseconds> ≡ <date>
 
         """
 
-        self.__fields = ['milliseconds', 'js', 'wasserstein', 'date']
+        self.__fields = ['milliseconds', 'js', 'wasserstein']
 
+        # Instances
         self.__configurations = config.Config()
         self.__objects = src.functions.objects.Objects()
 
@@ -29,8 +32,8 @@ class Persist:
     def __get_dictionary(self, frame: pd.DataFrame):
         """
 
+
         :param frame:
-        :param code:
         :return:
         """
 
