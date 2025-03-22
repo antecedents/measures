@@ -55,6 +55,8 @@ class Interface:
 
         listings = glob.glob(
             pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
+        codes = [os.path.basename(os.path.dirname(listing)) for listing in listings]
+        logging.info(codes)
 
         hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
         metrics = dask.delayed(src.drift.metrics.Metrics(arguments=self.__arguments).exc)
