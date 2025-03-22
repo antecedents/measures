@@ -92,7 +92,11 @@ class Setup:
 
         self.__directories.cleanup(path=self.__configurations.warehouse)
 
-        return self.__directories.create(path=self.__configurations.warehouse)
+        states = []
+        for path in [self.__configurations.points_, self.__configurations.menu_]:
+            states.append(self.__directories.create(path=path))
+
+        return all(states)
 
     def exc(self) -> bool:
         """
