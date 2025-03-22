@@ -8,6 +8,7 @@ import pandas as pd
 import config
 import src.drift.hankel
 import src.drift.metrics
+import src.drift.persist
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -31,6 +32,10 @@ class Interface:
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
 
+        # Listings
+        self.__listings = glob.glob(
+            pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
+
     @dask.delayed
     def __get_data(self, uri: str) -> pd.DataFrame:
         """
@@ -53,19 +58,21 @@ class Interface:
         :return:
         """
 
-        listings = glob.glob(
-            pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
-        codes = [os.path.basename(os.path.dirname(listing)) for listing in listings]
-        logging.info(codes)
+        # Codes
+        codes = [os.path.basename(os.path.dirname(listing)) for listing in self.__listings]
 
+        # Delayed Functions
         hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
         metrics = dask.delayed(src.drift.metrics.Metrics(arguments=self.__arguments).exc)
+        persist = dask.delayed(src.drift.persist.Persist().exc)
 
+        # Compute
         computations = []
-        for listing in listings:
-            data = self.__get_data(uri=listing)
+        for code in codes:
+            data = self.__get_data(uri=os.path.join(self.__configurations.data_, 'data', code, 'data.csv'))
             matrix = hankel(data=data)
-            shapes = metrics(matrix=matrix, data=data)
-            computations.append(shapes)
-        calculations = dask.compute(computations, scheduler='threads')[0]
-        logging.info(calculations)
+            frame = metrics(matrix=matrix, data=data)
+            message = persist(frame=frame, code=code)
+            computations.append(message)
+        messages = dask.compute(computations, scheduler='threads')[0]
+        logging.info(messages)
