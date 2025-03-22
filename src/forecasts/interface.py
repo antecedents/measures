@@ -65,7 +65,7 @@ class Interface:
         directories = src.functions.directories.Directories()
 
         for section in ['forecasts', 'errors']:
-            self.__path = os.path.join(self.__configurations.warehouse, section)
+            self.__path = os.path.join(self.__configurations.points_, section)
             directories.create(self.__path)
 
     def exc(self):
