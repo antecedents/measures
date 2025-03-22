@@ -16,9 +16,9 @@ def main():
     logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
     # Steps
-    # src.data.interface.Interface(s3_parameters=s3_parameters).exc()
-    # src.decompositions.interface.Interface().exc()
-    # src.forecasts.interface.Interface(arguments=arguments).exc()
+    src.data.interface.Interface(s3_parameters=s3_parameters).exc()
+    src.decompositions.interface.Interface().exc()
+    src.forecasts.interface.Interface(arguments=arguments).exc()
     src.drift.interface.Interface(arguments=arguments).exc()
 
     # Delete cache
