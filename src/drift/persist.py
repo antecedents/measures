@@ -31,7 +31,7 @@ class Persist:
         self.__objects = src.functions.objects.Objects()
 
         # Storage
-        self.__path = os.path.join(self.__configurations.warehouse, 'drift')
+        self.__path = os.path.join(self.__configurations.points_, 'drift')
         src.functions.directories.Directories().create(self.__path)
 
     def __get_dictionary(self, frame: pd.DataFrame):
