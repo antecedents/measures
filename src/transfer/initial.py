@@ -1,7 +1,6 @@
 """Module setup.py"""
 import sys
 
-import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.cache
@@ -32,11 +31,7 @@ class Initial:
         self.__bucket_name = self.__s3_parameters.external
 
         # Configurations, etc.
-        self.__configurations = config.Config()
         self.__prefix = 'warehouse'
-
-        # Instances
-        self.__directories = src.functions.directories.Directories()
 
     def __clear_prefix(self) -> bool:
         """
