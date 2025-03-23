@@ -8,13 +8,13 @@ import pandas as pd
 import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.elements.specifications as se
 import src.forecasts.measures
 import src.forecasts.metrics
 import src.forecasts.parts
 import src.forecasts.seasonal
 import src.forecasts.trend
 import src.functions.directories
-import src.specifications
 
 
 class Interface:
@@ -22,12 +22,14 @@ class Interface:
     Interface
     """
 
-    def __init__(self, arguments: dict):
+    def __init__(self, reference: pd.DataFrame, arguments: dict):
         """
 
+        :param reference:
         :param arguments: A set of model development, and supplementary, arguments.
         """
 
+        self.__reference = reference
         self.__arguments = arguments
 
         # Configurations
@@ -52,23 +54,32 @@ class Interface:
             self.__path = os.path.join(self.__configurations.points_, section)
             directories.create(self.__path)
 
-    def exc(self, reference: pd.DataFrame):
+    @dask.delayed
+    def __get__specifications(self, code: str) -> se.Specifications:
         """
 
-        :param reference:
+        :param code:
+        :return:
+        """
+
+        values: pd.Series =  self.__reference.loc[self.__reference['hospital_code'] == code, :].squeeze(axis=0)
+        dictionary = values.to_dict()
+
+        return se.Specifications(**dictionary)
+
+    def exc(self):
+        """
+
         :return:
         """
 
         # Ensure the storage directories exist; measures -> forecasts, metrics -> errors
         self.__directories()
 
-        # Specifications
-        specifications = dask.delayed(src.specifications.Specifications(reference=reference))
-
         # Hence
-        codes = reference['hospital_code'].unique()
+        codes = self.__reference['hospital_code'].unique()
         for code in codes:
-            specifications = specifications(code=code)
+            specifications = self.__get__specifications(code=code)
             seasonal: sa.Seasonal = self.__seasonal(code=code)
             trend: pd.DataFrame = self.__trend(code=code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
