@@ -1,5 +1,4 @@
 """Module specifications.py"""
-import logging
 import pandas as pd
 
 import src.elements.specifications as se
@@ -21,7 +20,7 @@ class Specifications:
 
         self.__reference = reference
 
-    def __call__(self, code: str) -> se.Specifications:
+    def exc(self, code: str) -> se.Specifications:
         """
 
         :param code: An institution/hospital code
