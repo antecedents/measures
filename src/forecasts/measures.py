@@ -6,6 +6,7 @@ import json
 import numpy as np
 import pandas as pd
 
+import src.elements.specifications as se
 import src.elements.parts as pr
 import config
 
@@ -77,7 +78,7 @@ class Measures:
 
         logging.info('Forecasts Values & Measures -> %s', message)
 
-    def exc(self, parts: pr.Parts, specifications: pd.Series) -> pr.Parts:
+    def exc(self, parts: pr.Parts, specifications: se.Specifications) -> pr.Parts:
         """
 
         :param parts: An institution's data object consisting of forecasts w.r.t. training,
