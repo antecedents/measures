@@ -1,19 +1,21 @@
 """Module measures.py"""
+import json
 import logging
 import os
-import json
 
 import numpy as np
 import pandas as pd
 
-import src.elements.specifications as se
-import src.elements.parts as pr
 import config
-
+import src.elements.parts as pr
+import src.elements.specifications as se
 import src.functions.objects
 
 
 class Measures:
+    """
+    Measures
+    """
 
     def __init__(self):
         """
