@@ -7,9 +7,9 @@ import dask
 import pandas as pd
 
 import config
-import src.elements.specifications as se
 import src.decompositions.persist
 import src.decompositions.structuring
+import src.elements.specifications as se
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -50,7 +50,7 @@ class Interface:
     @dask.delayed
     def __get__specifications(self, code: str) -> se.Specifications:
         """
-        
+
         :param code:
         :return:
         """
