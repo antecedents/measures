@@ -44,23 +44,22 @@ class Persist:
 
         return nodes
 
-    def exc(self, data: pd.DataFrame) -> str:
+    def exc(self, data: pd.DataFrame, specifications: pd.Series) -> str:
         """
 
         :param data: The decomposition data.
-
+        :param specifications: health_board_code -> A board's unique identification code. | hospital_code -> An
+                               institution's unique identification code.
         :return:
         """
 
-        # health_board_code: A board's unique identification code.
-        # hospital_code: An institution's unique identification code.
-        code = data[['health_board_code', 'hospital_code']].drop_duplicates().squeeze(axis=0)
-
         nodes: dict = self.__get_nodes(blob=data)
-        nodes['health_board_code'] = code.health_board_code
-        nodes['hospital_code'] = code.hospital_code
+        nodes['health_board_code'] = specifications.health_board_code
+        nodes['health_board_name'] = specifications.health_board_name
+        nodes['hospital_code'] = specifications.hospital_code
+        nodes['hospital_name'] = specifications.hospital_name
 
         message = self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__path, f'{code.hospital_code}.json'))
+            nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
 
         return message
