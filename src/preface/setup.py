@@ -104,7 +104,7 @@ class Setup:
         :return:
         """
 
-        if self.__s3() & self.__local() & self.__data():
+        if self.__local() & self.__data():
             return True
 
         src.functions.cache.Cache().exc()
