@@ -22,15 +22,13 @@ class Interface:
     Interface
     """
 
-    def __init__(self, reference: pd.DataFrame, arguments: dict):
+    def __init__(self, reference: pd.DataFrame):
         """
 
         :param reference:
-        :param arguments: A set of model development, and supplementary, arguments.
         """
 
         self.__reference = reference
-        self.__arguments = arguments
 
         # Configurations
         self.__configurations = config.Config()
@@ -39,8 +37,7 @@ class Interface:
         self.__seasonal = dask.delayed(src.forecasts.seasonal.Seasonal().exc)
         self.__trend = dask.delayed(src.forecasts.trend.Trend().exc)
         self.__parts = dask.delayed(src.forecasts.parts.Parts().exc)
-        self.__measures = dask.delayed(src.forecasts.measures.Measures().exc)
-        self.__metrics = dask.delayed(src.forecasts.metrics.Metrics().exc)
+
 
     def __directories(self):
         """
@@ -51,8 +48,8 @@ class Interface:
         directories = src.functions.directories.Directories()
 
         for section in ['forecasts', 'errors']:
-            self.__path = os.path.join(self.__configurations.points_, section)
-            directories.create(self.__path)
+            path = os.path.join(self.__configurations.points_, section)
+            directories.create(path)
 
     @dask.delayed
     def __get__specifications(self, code: str) -> se.Specifications:
@@ -76,6 +73,10 @@ class Interface:
         # Ensure the storage directories exist; measures -> forecasts, metrics -> errors
         self.__directories()
 
+        # Delayed tasks
+        measures = dask.delayed(src.forecasts.measures.Measures().exc)
+        metrics = dask.delayed(src.forecasts.metrics.Metrics().exc)
+
         # Hence
         codes = self.__reference['hospital_code'].unique()
         computations = []
@@ -84,8 +85,8 @@ class Interface:
             seasonal: sa.Seasonal = self.__seasonal(code=code)
             trend: pd.DataFrame = self.__trend(code=code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
-            parts_: pr.Parts = self.__measures(parts=parts, specifications=specifications)
-            message = self.__metrics(parts=parts_, specifications=specifications)
+            parts_: pr.Parts = measures(parts=parts, specifications=specifications)
+            message = metrics(parts=parts_, specifications=specifications)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
 
