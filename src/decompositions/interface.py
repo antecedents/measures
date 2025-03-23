@@ -27,11 +27,9 @@ class Interface:
 
         self.__reference = reference
 
+        # Instances
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
-
-        self.__structuring = dask.delayed(src.decompositions.structuring.Structuring().exc)
-        self.__persist = dask.delayed(src.decompositions.persist.Persist().exc)
 
     @dask.delayed
     def __get_data(self, uri: str) -> pd.DataFrame:
@@ -51,6 +49,11 @@ class Interface:
 
     @dask.delayed
     def __get__specifications(self, code: str) -> se.Specifications:
+        """
+        
+        :param code:
+        :return:
+        """
 
         values: pd.Series =  self.__reference.loc[
                              self.__reference['hospital_code'] == code, :].squeeze(axis=0)
@@ -69,13 +72,17 @@ class Interface:
         # Identification Codes
         codes = self.__reference['hospital_code'].unique()
 
+        # Delayed tasks
+        structuring = dask.delayed(src.decompositions.structuring.Structuring().exc)
+        persist = dask.delayed(src.decompositions.persist.Persist().exc)
+
         # Compute
         computations = []
         for code in codes:
             specifications = self.__get__specifications(code=code)
             data = self.__get_data(uri=path.format(code=code))
-            data = self.__structuring(blob=data.copy())
-            message = self.__persist(data=data, specifications=specifications)
+            data = structuring(blob=data.copy())
+            message = persist(data=data, specifications=specifications)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
 
