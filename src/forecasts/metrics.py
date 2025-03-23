@@ -71,11 +71,11 @@ class Metrics:
 
         return json.loads(string)
 
-    def exc(self, parts: pr.Parts, code: str):
+    def exc(self, parts: pr.Parts, specifications: pd.Series):
         """
 
         :param parts:
-        :param code:
+        :param specifications:
         :return:
         """
 
@@ -84,5 +84,5 @@ class Metrics:
             'tests': self.__get_metrics(data=parts.tests)}
         logging.info(nodes)
 
-        message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{code}.json'))
+        message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
         logging.info('Forecasts Metrics -> %s', message)
