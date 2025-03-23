@@ -4,7 +4,7 @@ import pandas as pd
 import src.elements.specifications as se
 
 
-class Specifications:
+class GetSpecifications:
     """
     <b>Notes</b><br>
     ------<br>
