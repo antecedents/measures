@@ -33,7 +33,8 @@ class Interface:
 
         # Metadata
         metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__metadata = metadata.exc(name='decomposition.json')
+        self.__metadata_p = metadata.exc(name='points.json')
+        self.__metadata_m = metadata.exc(name='menu.json')
 
         # Instances
         self.__dictionary = src.transfer.dictionary.Dictionary()
@@ -45,9 +46,11 @@ class Interface:
         :return:
         """
 
+        sections = ['decompositions', 'drift', 'errors', 'forecasts']
+
         frame = frame.assign(
             metadata = frame['section'].apply(
-                lambda x: self.__metadata if x == 'decomposition' else {}))
+                lambda x: self.__metadata_p if x in sections else self.__metadata_m))
 
         return frame
 

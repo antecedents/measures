@@ -5,6 +5,8 @@ import os
 import pandas as pd
 
 import config
+import src.elements.specifications as se
+import src.functions.directories
 import src.functions.objects
 
 
@@ -24,8 +26,11 @@ class Persist:
         self.__configurations = config.Config()
         self.__objects = src.functions.objects.Objects()
 
+        self.__path = os.path.join(self.__configurations.points_, 'decompositions')
+        src.functions.directories.Directories().create(self.__path)
+
         # Fields in focus
-        self.__fields = ['milliseconds', 'observation', 'trend', 'seasonal', 'residue', 'weight']
+        self.__fields = ['milliseconds', 'n_attendances', 'trend', 'seasonal', 'residue']
 
     def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
@@ -35,26 +40,27 @@ class Persist:
         :return:
         """
 
-
         string: str = blob[self.__fields].to_json(orient='split')
         nodes: dict = json.loads(string)
 
         return nodes
 
-    def exc(self, data: pd.DataFrame, health_board_code: str, hospital_code: str) -> str:
+    def exc(self, data: pd.DataFrame, specifications: se.Specifications) -> str:
         """
 
         :param data: The decomposition data.
-        :param health_board_code: A board's unique identification code.
-        :param hospital_code: An institution's unique identification code.
+        :param specifications: health_board_code -> A board's unique identification code. | hospital_code -> An
+                               institution's unique identification code. | etc.
         :return:
         """
 
         nodes: dict = self.__get_nodes(blob=data)
-        nodes['health_board_code'] = health_board_code
-        nodes['hospital_code'] = hospital_code
+        nodes['health_board_code'] = specifications.health_board_code
+        nodes['health_board_name'] = specifications.health_board_name
+        nodes['hospital_code'] = specifications.hospital_code
+        nodes['hospital_name'] = specifications.hospital_name
 
         message = self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__configurations.decomposition_, f'{hospital_code}.json'))
+            nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
 
         return message

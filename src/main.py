@@ -4,42 +4,33 @@ import logging
 import os
 import sys
 
-import boto3
-
 
 def main():
     """
+    https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 
     :return:
     """
 
-    logger: logging.Logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
+    logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
-    # Date Stamp: The most recent Tuesday.  The code of Tuesday is 1, hence now.weekday() - 1
-    now = datetime.datetime.now()
-    offset = (now.weekday() - 1) % 7
-    tuesday = now - datetime.timedelta(days=offset)
-    stamp = tuesday.strftime('%Y-%m-%d')
-    logger.info('Latest Tuesday: %s', stamp)
+    # Assets
+    src.assets.Assets(s3_parameters=s3_parameters).exc()
 
-    '''
-    Set up
-    '''
-    setup: bool = src.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
-    if not setup:
-        src.functions.cache.Cache().exc()
-        sys.exit('No Executions')
+    # Reference
+    reference = src.data.interface.Interface(
+        s3_parameters=s3_parameters).exc()
 
-    '''
-    Steps
-    '''
-    data = src.data.interface.Interface(s3_parameters=s3_parameters).exc(stamp=stamp)
-    src.decomposition.decomposing.Decomposing(data=data).exc()
-    src.transfer.interface.Interface(connector=connector, service=service, s3_parameters=s3_parameters).exc()
+    # Steps
+    src.decompositions.interface.Interface(reference=reference).exc()
+    src.forecasts.interface.Interface(reference=reference, arguments=arguments).exc()
+    src.drift.interface.Interface(reference=reference, arguments=arguments).exc()
 
-    '''
-    Cache
-    '''
+    src.transfer.interface.Interface(
+        connector=connector, service=service, s3_parameters=s3_parameters).exc()
+
+    # Delete cache
     src.functions.cache.Cache().exc()
 
 
@@ -54,18 +45,17 @@ if __name__ == '__main__':
                         format='\n\n%(message)s\n%(asctime)s.%(msecs)03d\n\n',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
-    # Classes
-    import src.data.interface
-    import src.decomposition.decomposing
-    import src.functions.cache
-    import src.functions.service
-    import src.s3.s3_parameters
-    import src.setup
-    import src.transfer.interface
 
-    # S3 S3Parameters, Service Instance
-    connector = boto3.session.Session()
-    s3_parameters = src.s3.s3_parameters.S3Parameters(connector=connector).exc()
-    service = src.functions.service.Service(connector=connector, region_name=s3_parameters.region_name).exc()
+    # Classes
+    import src.assets
+    import src.data.interface
+    import src.decompositions.interface
+    import src.functions.cache
+    import src.forecasts.interface
+    import src.preface.interface
+    import src.transfer.interface
+    import src.drift.interface
+
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
 
     main()

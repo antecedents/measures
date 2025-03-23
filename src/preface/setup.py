@@ -1,8 +1,10 @@
 """Module setup.py"""
+import sys
 
 import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
+import src.functions.cache
 import src.functions.directories
 import src.s3.bucket
 import src.s3.keys
@@ -31,7 +33,7 @@ class Setup:
 
         # Configurations, etc.
         self.__configurations = config.Config()
-        self.__prefix = 'warehouse/series'
+        self.__prefix = 'warehouse'
 
         # Instances
         self.__directories = src.functions.directories.Directories()
@@ -72,6 +74,16 @@ class Setup:
 
         return bucket.create()
 
+    def __data(self) -> bool:
+        """
+
+        :return:
+        """
+
+        self.__directories.cleanup(path=self.__configurations.data_)
+
+        return self.__directories.create(path=self.__configurations.data_)
+
     def __local(self) -> bool:
         """
 
@@ -80,7 +92,11 @@ class Setup:
 
         self.__directories.cleanup(path=self.__configurations.warehouse)
 
-        return self.__directories.create(path=self.__configurations.decomposition_)
+        states = []
+        for path in [self.__configurations.points_, self.__configurations.menu_]:
+            states.append(self.__directories.create(path=path))
+
+        return all(states)
 
     def exc(self) -> bool:
         """
@@ -88,4 +104,8 @@ class Setup:
         :return:
         """
 
-        return self.__s3() & self.__local()
+        if self.__s3() & self.__local() & self.__data():
+            return True
+
+        src.functions.cache.Cache().exc()
+        sys.exit('Set up failure (setup.py)')
