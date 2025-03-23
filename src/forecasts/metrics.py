@@ -1,14 +1,13 @@
 """Module metrics.py"""
-import logging
-import os
 import json
+import os
 
 import numpy as np
 import pandas as pd
 
 import config
-import src.elements.specifications as se
 import src.elements.parts as pr
+import src.elements.specifications as se
 import src.functions.objects
 
 
@@ -35,9 +34,9 @@ class Metrics:
         :return:
         """
 
-        se: np.ndarray = np.power(data[['l_e_error', 'u_e_error']].to_numpy(), 2)
+        square_error: np.ndarray = np.power(data[['l_e_error', 'u_e_error']].to_numpy(), 2)
         mse: np.ndarray = np.expand_dims(
-            np.sum(se, axis=0)/se.shape[0], axis=0)
+            np.sum(square_error, axis=0)/square_error.shape[0], axis=0)
 
         frame = pd.DataFrame(data=np.sqrt(mse),
                              columns=['l_e_metrics', 'u_e_metrics'], index=['r_mse'])
@@ -72,7 +71,7 @@ class Metrics:
 
         return json.loads(string)
 
-    def exc(self, parts: pr.Parts, specifications: se.Specifications):
+    def exc(self, parts: pr.Parts, specifications: se.Specifications) -> str:
         """
 
         :param parts:
@@ -82,8 +81,12 @@ class Metrics:
 
         nodes = {
             'estimates': self.__get_metrics(data=parts.estimates),
-            'tests': self.__get_metrics(data=parts.tests)}
-        logging.info(nodes)
+            'tests': self.__get_metrics(data=parts.tests),
+            'health_board_code': specifications.health_board_code,
+            'health_board_name': specifications.health_board_name,
+            'hospital_code': specifications.hospital_code,
+            'hospital_name': specifications.hospital_name}
 
         message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
-        logging.info('Forecasts Metrics -> %s', message)
+
+        return message
