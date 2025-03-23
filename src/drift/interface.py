@@ -1,5 +1,4 @@
 """Module interface.py"""
-import glob
 import logging
 import os
 
@@ -25,7 +24,7 @@ class Interface:
     def __init__(self, reference: pd.DataFrame, arguments: dict):
         """
 
-        :param reference:
+        :param reference: The institutions/hospitals & health board reference.
         :param arguments: A set of model development, and supplementary, arguments.
         """
 
@@ -35,10 +34,6 @@ class Interface:
         # Instances
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
-
-        # Listings
-        self.__listings = glob.glob(
-            pathname=os.path.join(self.__configurations.data_, 'data', '**', 'data.csv'))
 
     @dask.delayed
     def __get_data(self, uri: str) -> pd.DataFrame:
