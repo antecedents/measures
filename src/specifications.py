@@ -18,7 +18,7 @@ class Specifications:
 
         self.__reference = reference
 
-    def __call__(self, code: str):
+    def __call__(self, code: str) -> pd.Series:
         """
 
         :param code:
