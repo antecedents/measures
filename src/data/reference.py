@@ -46,11 +46,10 @@ class References:
 
         return self.__stream.read(text=text)
 
-    def exc(self) -> pd.DataFrame:
+    def exc(self, codes: list[str]) -> pd.DataFrame:
         """
-        line = reference.loc[reference['hospital_code'] == '...', :]
-        logging.info(line.squeeze())
 
+        :param codes:
         :return:
         """
 
@@ -58,4 +57,4 @@ class References:
         institutions = self.__institutions()
         reference = institutions.merge(boards, on='health_board_code', how='left')
 
-        return reference
+        return reference.loc[reference['hospital_code'].isin(codes), :]
