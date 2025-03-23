@@ -6,7 +6,7 @@ import src.elements.text_attributes as txa
 import src.functions.streams
 
 
-class References:
+class Reference:
     """
     Reference
     """
