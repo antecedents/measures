@@ -1,5 +1,6 @@
-import logging
+"""Module interface.py"""
 import glob
+import logging
 import os
 
 import dask
@@ -9,6 +10,7 @@ import config
 import src.drift.hankel
 import src.drift.metrics
 import src.drift.persist
+import src.elements.specifications as se
 import src.elements.text_attributes as txa
 import src.functions.streams
 
@@ -20,12 +22,14 @@ class Interface:
     The interface to drift score programs.<br>
     """
 
-    def __init__(self, arguments: dict):
+    def __init__(self, reference: pd.DataFrame, arguments: dict):
         """
 
+        :param reference:
         :param arguments: A set of model development, and supplementary, arguments.
         """
 
+        self.__reference = reference
         self.__arguments = arguments
 
         # Instances
@@ -52,14 +56,26 @@ class Interface:
 
         return frame
 
+    @dask.delayed
+    def __get__specifications(self, code: str) -> se.Specifications:
+        """
+
+        :param code:
+        :return:
+        """
+
+        values: pd.Series =  self.__reference.loc[self.__reference['hospital_code'] == code, :].squeeze(axis=0)
+        dictionary = values.to_dict()
+
+        return se.Specifications(**dictionary)
+
     def exc(self):
         """
 
         :return:
         """
 
-        # Codes
-        codes = [os.path.basename(os.path.dirname(listing)) for listing in self.__listings]
+        path = os.path.join(self.__configurations.data_, 'data', '{code}', 'data.csv')
 
         # Delayed Functions
         hankel = dask.delayed(src.drift.hankel.Hankel(arguments=self.__arguments).exc)
@@ -67,12 +83,14 @@ class Interface:
         persist = dask.delayed(src.drift.persist.Persist().exc)
 
         # Compute
+        codes = self.__reference['hospital_code'].unique()
         computations = []
         for code in codes:
-            data = self.__get_data(uri=os.path.join(self.__configurations.data_, 'data', code, 'data.csv'))
+            specifications = self.__get__specifications(code=code)
+            data = self.__get_data(uri=path.format(code=code))
             matrix = hankel(data=data)
             frame = metrics(matrix=matrix, data=data)
-            message = persist(frame=frame, code=code)
+            message = persist(frame=frame, specifications=specifications)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
         logging.info(messages)
