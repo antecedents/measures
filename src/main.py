@@ -24,7 +24,7 @@ def main():
 
     # Steps
     src.decompositions.interface.Interface(reference=reference).exc()
-    src.forecasts.interface.Interface(reference=reference, arguments=arguments).exc()
+    src.forecasts.interface.Interface(reference=reference).exc()
     src.drift.interface.Interface(reference=reference, arguments=arguments).exc()
 
     src.transfer.interface.Interface(
