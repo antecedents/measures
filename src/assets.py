@@ -1,4 +1,4 @@
-
+"""Module assets.py"""
 import logging
 
 import config
@@ -46,6 +46,10 @@ class Assets:
             raise err from err
 
     def exc(self):
+        """
+
+        :return:
+        """
 
         state = self.__get_assets()
         logging.info('Assets State: %s', state)
