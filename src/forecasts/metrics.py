@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 import config
+import src.elements.specifications as se
 import src.elements.parts as pr
 import src.functions.objects
 
@@ -71,7 +72,7 @@ class Metrics:
 
         return json.loads(string)
 
-    def exc(self, parts: pr.Parts, specifications: pd.Series):
+    def exc(self, parts: pr.Parts, specifications: se.Specifications):
         """
 
         :param parts:
