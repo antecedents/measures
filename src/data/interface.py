@@ -2,7 +2,6 @@
 
 import pandas as pd
 
-import config
 import src.data.codes
 import src.data.menu
 import src.data.reference
@@ -26,9 +25,6 @@ class Interface:
         """
 
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
-
-        # Setting up
-        self.__configurations = config.Config()
 
     def exc(self) -> pd.DataFrame:
         """
