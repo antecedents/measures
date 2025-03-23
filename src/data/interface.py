@@ -1,7 +1,12 @@
 """Module interface.py"""
 import logging
 
+import pandas as pd
+
 import config
+import src.data.codes
+import src.data.menu
+import src.data.reference
 import src.elements.s3_parameters as s3p
 import src.s3.directives
 import src.s3.unload
@@ -33,30 +38,31 @@ class Interface:
         # Directives
         self.__directives = src.s3.directives.Directives()
 
-    def __get_assets(self, source_bucket: str, origin: str, target: str):
-        """
-
-        :param source_bucket:
-        :param origin:
-        :param target:
-        :return:
-        """
-
-        return self.__directives.synchronise(
-            source_bucket=source_bucket, origin=origin, target=target)
-
-    def exc(self):
+    def __get_assets(self) -> int:
         """
 
         :return:
         """
 
         try:
-            state = self.__get_assets(
-                source_bucket=self.__source_bucket,
-                origin=self.__prefix,
-                target=self.__configurations.data_)
+            return self.__directives.synchronise(
+                source_bucket=self.__source_bucket, origin=self.__prefix, target=self.__configurations.data_)
         except RuntimeError as err:
             raise err from err
 
-        logging.info(state)
+    def exc(self) -> pd.DataFrame:
+        """
+
+        :return:
+        """
+
+        '''
+        state = self.__get_assets()
+        '''
+
+        codes: list[str] = src.data.codes.Codes().exc()
+        reference = src.data.reference.Reference(
+            s3_parameters=self.__s3_parameters).exc(codes=codes)
+        src.data.menu.Menu().exc(reference=reference)
+
+        return reference
