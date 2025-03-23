@@ -33,7 +33,8 @@ class Interface:
 
         # Metadata
         metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__metadata = metadata.exc(name='decomposition.json')
+        self.__metadata_p = metadata.exc(name='points.json')
+        self.__metadata_m = metadata.exc(name='menu.json')
 
         # Instances
         self.__dictionary = src.transfer.dictionary.Dictionary()
@@ -45,9 +46,11 @@ class Interface:
         :return:
         """
 
+        sections = ['decompositions', 'drift', 'errors', 'forecasts']
+
         frame = frame.assign(
             metadata = frame['section'].apply(
-                lambda x: self.__metadata if x == 'decomposition' else {}))
+                lambda x: self.__metadata_p if x in sections else self.__metadata_m))
 
         return frame
 
@@ -60,13 +63,16 @@ class Interface:
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings = self.__dictionary.exc(
             path=os.path.join(os.getcwd(), 'warehouse'), extension='json', prefix='warehouse/')
+        logging.info(strings)
 
         # Adding metadata details per instance
         strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
         # Transfer
+        '''
         messages = src.s3.ingress.Ingress(
             service=self.__service, bucket_name=self.__s3_parameters.external).exc(
             strings=strings, tagging='project=emergency')
         logging.info(messages)
+        '''
