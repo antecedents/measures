@@ -77,12 +77,12 @@ class Measures:
 
         logging.info('Forecasts Values & Measures -> %s', message)
 
-    def exc(self, parts: pr.Parts, code: str) -> pr.Parts:
+    def exc(self, parts: pr.Parts, specifications: pd.Series) -> pr.Parts:
         """
 
         :param parts: An institution's data object consisting of forecasts w.r.t. training,
                       testing, and futures parts.<br>
-        :param code: An institution's identification code.<br>
+        :param specifications: An institution's identifiers.<br>
         :return:
         """
 
@@ -93,6 +93,6 @@ class Measures:
             'estimates': self.__get_node(parts.estimates[self.__reference]),
             'tests': self.__get_node(parts.tests[self.__reference]),
             'futures': self.__get_node(parts.futures[self.__minimal])}
-        self.__persist(nodes=nodes, code=code)
+        self.__persist(nodes=nodes, code=specifications.hospital_code)
 
         return parts
