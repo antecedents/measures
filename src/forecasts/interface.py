@@ -1,5 +1,5 @@
 """Module """
-import glob
+import logging
 import os
 
 import dask
@@ -78,10 +78,15 @@ class Interface:
 
         # Hence
         codes = self.__reference['hospital_code'].unique()
+        computations = []
         for code in codes:
             specifications = self.__get__specifications(code=code)
             seasonal: sa.Seasonal = self.__seasonal(code=code)
             trend: pd.DataFrame = self.__trend(code=code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
-            parts: pr.Parts = self.__measures(parts=parts, specifications=specifications)
-            self.__metrics(parts=parts, specifications=specifications)
+            parts_: pr.Parts = self.__measures(parts=parts, specifications=specifications)
+            message = self.__metrics(parts=parts_, specifications=specifications)
+            computations.append(message)
+        messages = dask.compute(computations, scheduler='threads')[0]
+
+        logging.info(messages)
