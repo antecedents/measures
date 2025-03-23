@@ -1,19 +1,20 @@
 """Module """
 import glob
 import os
-import pathlib
 
+import dask
 import pandas as pd
 
 import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.forecasts.measures
 import src.forecasts.metrics
 import src.forecasts.parts
 import src.forecasts.seasonal
 import src.forecasts.trend
-import src.forecasts.measures
 import src.functions.directories
+import src.specifications
 
 
 class Interface:
@@ -33,28 +34,11 @@ class Interface:
         self.__configurations = config.Config()
 
         # Instances
-        self.__seasonal = src.forecasts.seasonal.Seasonal()
-        self.__trend = src.forecasts.trend.Trend()
-        self.__parts = src.forecasts.parts.Parts()
-        self.__measures = src.forecasts.measures.Measures()
-        self.__metrics = src.forecasts.metrics.Metrics()
-
-    def __get_codes(self) -> list[str] | None:
-        """
-
-        :return:
-        """
-
-        listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'models', '**'))
-
-        codes = []
-        for listing in listings:
-            state = (pathlib.Path(os.path.join(listing, 'scf_estimates.json')).exists() &
-                     pathlib.Path(os.path.join(listing, 'tcf_forecasts.csv')).exists())
-            if state:
-                codes.append(os.path.basename(listing))
-
-        return codes
+        self.__seasonal = dask.delayed(src.forecasts.seasonal.Seasonal().exc)
+        self.__trend = dask.delayed(src.forecasts.trend.Trend().exc)
+        self.__parts = dask.delayed(src.forecasts.parts.Parts().exc)
+        self.__measures = dask.delayed(src.forecasts.measures.Measures().exc)
+        self.__metrics = dask.delayed(src.forecasts.metrics.Metrics().exc)
 
     def __directories(self):
         """
@@ -68,20 +52,25 @@ class Interface:
             self.__path = os.path.join(self.__configurations.points_, section)
             directories.create(self.__path)
 
-    def exc(self):
+    def exc(self, reference: pd.DataFrame):
         """
 
+        :param reference:
         :return:
         """
 
         # Ensure the storage directories exist; measures -> forecasts, metrics -> errors
         self.__directories()
 
+        # Specifications
+        specifications = dask.delayed(src.specifications.Specifications(reference=reference))
+
         # Hence
-        codes = self.__get_codes()
+        codes = reference['hospital_code'].unique()
         for code in codes:
-            seasonal: sa.Seasonal = self.__seasonal.exc(code=code)
-            trend: pd.DataFrame = self.__trend.exc(code=code)
-            parts: pr.Parts = self.__parts.exc(seasonal=seasonal, trend=trend)
-            parts: pr.Parts = self.__measures.exc(parts=parts, code=code)
-            self.__metrics.exc(parts=parts, code=code)
+            specifications = specifications(code=code)
+            seasonal: sa.Seasonal = self.__seasonal(code=code)
+            trend: pd.DataFrame = self.__trend(code=code)
+            parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
+            parts: pr.Parts = self.__measures(parts=parts, specifications=specifications)
+            self.__metrics(parts=parts, specifications=specifications)
