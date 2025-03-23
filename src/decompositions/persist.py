@@ -5,6 +5,7 @@ import os
 import pandas as pd
 
 import config
+import src.elements.specifications as se
 import src.functions.directories
 import src.functions.objects
 
@@ -44,7 +45,7 @@ class Persist:
 
         return nodes
 
-    def exc(self, data: pd.DataFrame, specifications: pd.Series) -> str:
+    def exc(self, data: pd.DataFrame, specifications: se.Specifications) -> str:
         """
 
         :param data: The decomposition data.
