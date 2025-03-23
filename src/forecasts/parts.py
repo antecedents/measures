@@ -57,10 +57,10 @@ class Parts:
         futures = seasonal.futures.merge(trend, how='left', on='week_ending_date')
         futures['n_attendances'] = np.nan
 
-        return (estimates[self.__fields].rename(columns=self.__rename), 
+        return (estimates[self.__fields].rename(columns=self.__rename),
                 tests[self.__fields].rename(columns=self.__rename),
                 futures[self.__fields].rename(columns=self.__rename))
-    
+
     def __add_boundaries(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         
@@ -70,13 +70,13 @@ class Parts:
 
         data['l_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
-            percentile=(0.5 - 0.5*self.__span))
+            percentile=0.5 - 0.5*self.__span)
         data['u_estimate'] = self.__metric(
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
-            percentile=(0.5 + 0.5*self.__span))
-        
+            percentile=0.5 + 0.5*self.__span)
+
         return data
-        
+
     def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pr.Parts:
         """
 
@@ -86,7 +86,7 @@ class Parts:
         """
 
         estimates, tests, futures = self.__get_parts(seasonal=seasonal, trend=trend)
-        
+
         estimates = self.__add_boundaries(data=estimates.copy())
         tests = self.__add_boundaries(data=tests.copy())
         futures = self.__add_boundaries(data=futures.copy())
