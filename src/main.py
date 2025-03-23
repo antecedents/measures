@@ -15,13 +15,20 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
-    # Steps
-    reference = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
-    logger.info(reference)
+    # Assets
+    src.assets.Assets(s3_parameters=s3_parameters).exc()
 
-    # src.decompositions.interface.Interface().exc()
-    # src.forecasts.interface.Interface(arguments=arguments).exc()
-    # src.drift.interface.Interface(arguments=arguments).exc()
+    # Reference
+    reference = src.data.interface.Interface(
+        s3_parameters=s3_parameters).exc()
+
+    # Steps
+    src.decompositions.interface.Interface(reference=reference).exc()
+    src.forecasts.interface.Interface(reference=reference, arguments=arguments).exc()
+    src.drift.interface.Interface(reference=reference, arguments=arguments).exc()
+
+    src.transfer.interface.Interface(
+        connector=connector, service=service, s3_parameters=s3_parameters).exc()
 
     # Delete cache
     src.functions.cache.Cache().exc()
@@ -40,6 +47,7 @@ if __name__ == '__main__':
 
 
     # Classes
+    import src.assets
     import src.data.interface
     import src.decompositions.interface
     import src.functions.cache
