@@ -93,4 +93,4 @@ class Interface:
             message = persist(frame=frame, specifications=specifications)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
-        logging.info(messages)
+        logging.info('Drift -> \n%s', messages)
