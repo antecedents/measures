@@ -5,6 +5,7 @@ import os
 import pandas as pd
 
 import config
+import src.elements.specifications as se
 import src.functions.directories
 import src.functions.objects
 
@@ -34,7 +35,7 @@ class Persist:
         self.__path = os.path.join(self.__configurations.points_, 'drift')
         src.functions.directories.Directories().create(self.__path)
 
-    def __get_dictionary(self, frame: pd.DataFrame):
+    def __get_dictionary(self, frame: pd.DataFrame, specifications: se.Specifications):
         """
 
 
@@ -45,24 +46,25 @@ class Persist:
         string: str = frame[self.__fields].to_json(orient='split')
         dictionary: dict = json.loads(string)
 
-        code: pd.Series = frame[['health_board_code', 'hospital_code']].drop_duplicates().squeeze()
-        dictionary['health_board_code'] = code.health_board_code
-        dictionary['hospital_code'] = code.hospital_code
+        dictionary['health_board_code'] = specifications.health_board_code
+        dictionary['health_board_name'] = specifications.health_board_name
+        dictionary['hospital_code'] = specifications.hospital_code
+        dictionary['hospital_name'] = specifications.hospital_name
 
         return dictionary
 
-    def exc(self, frame: pd.DataFrame, code: str) -> str:
+    def exc(self, frame: pd.DataFrame, specifications: se.Specifications) -> str:
         """
 
         :param frame:
-        :param code:
+        :param specifications:
         :return:
         """
 
         # Dictionary
-        dictionary = self.__get_dictionary(frame=frame)
+        dictionary = self.__get_dictionary(frame=frame, specifications=specifications)
 
         message = self.__objects.write(
-            nodes=dictionary, path=os.path.join(self.__path, f'{code}.json'))
+            nodes=dictionary, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
 
         return message
