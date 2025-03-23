@@ -1,5 +1,5 @@
 """Module menu.py"""
-import glob
+import logging
 import os
 
 import pandas as pd
@@ -20,17 +20,19 @@ class Menu:
 
         self.__configurations = config.Config()
 
-    def exc(self):
+    def exc(self, reference: pd.DataFrame):
         """
 
+        :param reference: The institutions/hospitals & health board reference.
         :return:
         """
 
-        listings = glob.glob(os.path.join(self.__configurations.data_, 'data', '**'))
-        codes = [os.path.basename(listing) for listing in listings]
+        frame = pd.DataFrame(data={'desc': reference['hospital_code'].to_numpy(),
+                                   'name': reference['hospital_name'].to_numpy()})
 
-        frame = pd.DataFrame(data={'desc': codes, 'name': codes})
         nodes = frame.to_dict(orient='records')
+        logging.info(nodes)
 
-        src.functions.objects.Objects().write(
+        message = src.functions.objects.Objects().write(
             nodes=nodes, path=os.path.join(self.__configurations.menu_, 'menu.json'))
+        logging.info(message)
