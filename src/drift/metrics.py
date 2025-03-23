@@ -1,3 +1,4 @@
+"""Module metrics.py"""
 import typing
 
 import numpy as np
@@ -7,11 +8,14 @@ import scipy.stats as sta
 
 
 class Metrics:
+    """
+    Drift metrics
+    """
 
     def __init__(self, arguments: dict):
         """
 
-        :param arguments:
+        :param arguments: A set of model development, and supplementary, arguments.
         """
 
         self.__arguments = arguments
@@ -20,8 +24,8 @@ class Metrics:
     def __get_js(penultimate: np.ndarray, ultimate: np.ndarray) -> np.ndarray | float:
         """
 
-        :param penultimate:
-        :param ultimate:
+        :param penultimate: A hankel matrix of attendances; excludes the final period.
+        :param ultimate: A hankel matrix of attendances; includes the final period.
         :return:
         """
 
@@ -38,7 +42,7 @@ class Metrics:
         """
 
         # noinspection PyTypeChecker
-        return sta.wasserstein_distance(penultimate, ultimate).__float__()
+        return float(sta.wasserstein_distance(penultimate, ultimate))
 
     @staticmethod
     def __get_matrices(matrix: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
@@ -70,8 +74,8 @@ class Metrics:
     def exc(self, matrix: np.ndarray, data: pd.DataFrame) -> pd.DataFrame:
         """
 
-        :param matrix:
-        :param data:
+        :param matrix: Hankel matrix
+        :param data: An institution's data
         :return:
         """
 
