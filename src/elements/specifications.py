@@ -1,4 +1,4 @@
-
+"""Module specifications.py"""
 import typing
 
 class Specifications(typing.NamedTuple):
