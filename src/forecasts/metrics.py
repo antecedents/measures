@@ -12,6 +12,9 @@ import src.functions.objects
 
 
 class Metrics:
+    """
+    Metrics
+    """
 
     def __init__(self):
         """
