@@ -1,5 +1,8 @@
 """Module specifications.py"""
+import logging
 import pandas as pd
+
+import src.elements.specifications as se
 
 
 class Specifications:
@@ -13,17 +16,21 @@ class Specifications:
     def __init__(self, reference: pd.DataFrame):
         """
 
-        :param reference:
+        :param reference: The institutions/hospitals & health board reference.
         """
 
         self.__reference = reference
 
-    def __call__(self, code: str) -> pd.Series:
+    def __call__(self, code: str) -> se.Specifications:
         """
 
-        :param code:
+        :param code: An institution/hospital code
         :return:
         """
 
-        return self.__reference.loc[
+        values: pd.Series =  self.__reference.loc[
                self.__reference['hospital_code'] == code, :].squeeze(axis=0)
+        dictionary = values.to_dict()
+
+
+        return se.Specifications(**dictionary)
