@@ -93,7 +93,11 @@ class Measures:
         nodes = {
             'estimates': self.__get_node(parts.estimates[self.__reference]),
             'tests': self.__get_node(parts.tests[self.__reference]),
-            'futures': self.__get_node(parts.futures[self.__minimal])}
+            'futures': self.__get_node(parts.futures[self.__minimal]),
+            'health_board_code': specifications.health_board_code,
+            'health_board_name': specifications.health_board_name,
+            'hospital_code': specifications.hospital_code,
+            'hospital_name': specifications.hospital_name}
         self.__persist(nodes=nodes, code=specifications.hospital_code)
 
         return parts
