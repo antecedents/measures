@@ -56,9 +56,9 @@ class Interface:
         :return:
         """
 
-        '''
+
         state = self.__get_assets()
-        '''
+        logging.info(state)
 
         codes: list[str] = src.data.codes.Codes().exc()
         reference = src.data.reference.Reference(
