@@ -31,8 +31,7 @@ class Menu:
                                    'name': reference['hospital_name'].to_numpy()})
 
         nodes = frame.to_dict(orient='records')
-        logging.info(nodes)
 
         message = src.functions.objects.Objects().write(
             nodes=nodes, path=os.path.join(self.__configurations.menu_, 'menu.json'))
-        logging.info(message)
+        logging.info('Graphing Menu ->\n%s', message)
