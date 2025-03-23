@@ -50,7 +50,7 @@ class Persist:
 
         :param data: The decomposition data.
         :param specifications: health_board_code -> A board's unique identification code. | hospital_code -> An
-                               institution's unique identification code.
+                               institution's unique identification code. | etc.
         :return:
         """
 
