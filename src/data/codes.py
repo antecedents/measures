@@ -41,7 +41,7 @@ class Codes:
                 codes.append(stem)
         return codes
 
-    def exc(self):
+    def exc(self) -> list[str] | None:
         """
 
         :return:
