@@ -1,15 +1,24 @@
-import config
+"""Module codes.py"""
 import glob
 import os
-
 import pathlib
 
+import config
+
+
 class Codes:
+    """
+    <b>Notes</b><br>
+    ------<br>
+    Determines the institutions list.<br>
+    """
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__configurations = config.Config()
-
         self.__path_m = os.path.join(self.__configurations.data_, 'models')
         self.__path_d = os.path.join(self.__configurations.data_, 'data')
 
@@ -19,7 +28,7 @@ class Codes:
         :return:
         """
 
-        listings = glob.glob(pathname=os.path.join(self.__configurations.data_, 'models', '**'))
+        listings = glob.glob(pathname=os.path.join(self.__path_m, '**'))
         stems = [os.path.basename(listing) for listing in listings]
 
         codes = []
@@ -33,5 +42,9 @@ class Codes:
         return codes
 
     def exc(self):
+        """
+
+        :return:
+        """
 
         return self.__get_codes()
