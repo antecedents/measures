@@ -7,11 +7,11 @@ import dask
 import pandas as pd
 
 import config
+import src.elements.specifications as se
 import src.decompositions.persist
 import src.decompositions.structuring
 import src.elements.text_attributes as txa
 import src.functions.streams
-import src.specifications
 
 
 class Interface:
@@ -19,10 +19,13 @@ class Interface:
     The interface to the programs that prepare the appropriate data structures for graphing the decompositions.
     """
 
-    def __init__(self):
+    def __init__(self, reference: pd.DataFrame):
         """
 
+        :param reference:
         """
+
+        self.__reference = reference
 
         self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
@@ -46,25 +49,30 @@ class Interface:
 
         return frame
 
-    def exc(self, reference: pd.DataFrame):
+    @dask.delayed
+    def __get__specifications(self, code: str) -> se.Specifications:
+
+        values: pd.Series =  self.__reference.loc[
+                             self.__reference['hospital_code'] == code, :].squeeze(axis=0)
+        dictionary = values.to_dict()
+
+        return se.Specifications(**dictionary)
+
+    def exc(self):
         """
 
-        :param reference:
         :return:
         """
 
         path = os.path.join(self.__configurations.data_, 'data', '{code}', 'features.csv')
 
         # Identification Codes
-        codes = reference['hospital_code'].unique()
-
-        # Specifications
-        specifications = dask.delayed(src.specifications.Specifications(reference=reference))
+        codes = self.__reference['hospital_code'].unique()
 
         # Compute
         computations = []
         for code in codes:
-            specifications = specifications(code=code)
+            specifications = self.__get__specifications(code=code)
             data = self.__get_data(uri=path.format(code=code))
             data = self.__structuring(blob=data.copy())
             message = self.__persist(data=data, specifications=specifications)
