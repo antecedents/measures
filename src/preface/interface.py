@@ -30,17 +30,6 @@ class Interface:
 
         return src.s3.configurations.Configurations(connector=connector).objects(key_name=key_name)
 
-    @staticmethod
-    def __setting_up(service: sr.Service, s3_parameters: s3p.S3Parameters):
-        """
-
-        :param service:
-        :param s3_parameters:
-        :return:
-        """
-
-        src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
-
     def exc(self) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """
 
@@ -53,6 +42,6 @@ class Interface:
             connector=connector, region_name=s3_parameters.region_name).exc()
         arguments: dict = self.__get_arguments(connector=connector)
 
-        self.__setting_up(service=service, s3_parameters=s3_parameters)
+        src.preface.setup.Setup().exc()
 
         return connector, s3_parameters, service, arguments
