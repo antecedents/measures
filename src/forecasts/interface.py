@@ -9,6 +9,7 @@ import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
 import src.elements.specifications as se
+import src.forecasts.boundaries
 import src.forecasts.measures
 import src.forecasts.metrics
 import src.forecasts.parts
@@ -74,6 +75,7 @@ class Interface:
         self.__directories()
 
         # Delayed tasks
+        boundaries = dask.delayed(src.forecasts.boundaries.Boundaries().exc)
         measures = dask.delayed(src.forecasts.measures.Measures().exc)
         metrics = dask.delayed(src.forecasts.metrics.Metrics().exc)
 
@@ -85,7 +87,8 @@ class Interface:
             seasonal: sa.Seasonal = self.__seasonal(code=code)
             trend: pd.DataFrame = self.__trend(code=code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
-            parts_: pr.Parts = measures(parts=parts, specifications=specifications)
+            _parts: pr.Parts = boundaries(parts=parts)
+            parts_: pr.Parts = measures(parts=_parts, specifications=specifications)
             message = metrics(parts=parts_, specifications=specifications)
             computations.append(message)
         messages = dask.compute(computations, scheduler='threads')[0]
