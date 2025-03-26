@@ -75,6 +75,9 @@ class Parts:
             period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
             percentile=0.5 + 0.5*self.__span)
 
+        data['l_tc_estimate'] = data['l_estimate'] - data['sc_estimate']
+        data['u_tc_estimate'] = data['u_estimate'] - data['sc_estimate']
+
         return data
 
     def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pr.Parts:
