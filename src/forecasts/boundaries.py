@@ -48,9 +48,17 @@ class Boundaries:
 
         return data
 
-    def exc(self, parts: pr.Parts):
+    def exc(self, parts: pr.Parts) -> pr.Parts:
         """
 
         :param parts:
         :return:
         """
+
+        estimates = self.__add_boundaries(data=parts.estimates.copy())
+        tests = self.__add_boundaries(data=parts.tests.copy())
+        futures = self.__add_boundaries(data=parts.futures.copy())
+
+        parts._replace(estimates=estimates, tests=tests, futures=futures)
+
+        return parts
