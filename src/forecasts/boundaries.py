@@ -6,6 +6,13 @@ import src.elements.parts as pr
 
 
 class Boundaries:
+    """
+    <b>Notes</b><br>
+    ------<br>
+
+    Estimations boundaries.
+
+    """
 
     def __init__(self):
         """
