@@ -1,8 +1,12 @@
 """Module assets.py"""
+import glob
 import logging
+import os
+import sys
 
 import config
 import src.elements.s3_parameters as s3p
+import src.functions.cache
 import src.s3.directives
 import src.s3.unload
 
@@ -51,5 +55,12 @@ class Assets:
         :return:
         """
 
+        # The artefacts, vis-à-vis modelling.
         state = self.__get_assets()
         logging.info('Assets State: %s', state)
+
+        # Third Eye
+        listings = glob.glob(pathname=os.path.join(self.__configurations.data_, '**', '*.*'), recursive=True)
+        if len(listings) == 0:
+            src.functions.cache.Cache().exc()
+            sys.exit('EMPTY ARTEFACTS DIRECTORIES')
