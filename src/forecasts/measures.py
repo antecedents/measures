@@ -18,7 +18,7 @@ class Measures:
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
@@ -29,9 +29,10 @@ class Measures:
 
         # Graphing fields; minimal is for futures parts, which do not include error measures because
         # their true values are yet unknown.
-        self.__reference = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
-                            'l_e_error_rate', 'u_e_error_rate', 'trend', 'l_tc_estimate', 'u_tc_estimate', 'l_tc_ep', 'u_tc_ep']
-        self.__minimal = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate']
+        self.__f_estimates = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
+                              'l_e_ep', 'u_e_ep', 'trend', 'l_tc_estimate', 'u_tc_estimate', 'l_tc_ep', 'u_tc_ep']
+        self.__f_tests = list(set(self.__f_estimates) - {'l_tc_ep', 'u_tc_ep'})
+        self.__f_futures = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_tc_estimate', 'u_tc_estimate']
 
     @staticmethod
     def __get_node(blob: pd.DataFrame) -> dict:
@@ -68,9 +69,9 @@ class Measures:
         """
 
         nodes = {
-            'estimates': self.__get_node(parts.estimates[self.__reference]),
-            'tests': self.__get_node(parts.tests[self.__reference]),
-            'futures': self.__get_node(parts.futures[self.__minimal]),
+            'estimates': self.__get_node(parts.estimates[self.__f_estimates]),
+            'tests': self.__get_node(parts.tests[self.__f_tests]),
+            'futures': self.__get_node(parts.futures[self.__f_futures]),
             'health_board_code': specifications.health_board_code,
             'health_board_name': specifications.health_board_name,
             'hospital_code': specifications.hospital_code,
