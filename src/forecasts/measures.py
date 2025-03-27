@@ -3,7 +3,6 @@ import json
 import logging
 import os
 
-import numpy as np
 import pandas as pd
 
 import config
@@ -33,27 +32,6 @@ class Measures:
         self.__reference = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
                             'l_e_error_rate', 'u_e_error_rate']
         self.__minimal = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate']
-
-    @staticmethod
-    def __errors(data: pd.DataFrame) -> pd.DataFrame:
-        """
-
-        :param data: The forecasts w.r.t. training or testing phases.
-        :return:
-        """
-
-        # ground truth
-        ground = data['n_attendances'].to_numpy()[:,None]
-
-        # forecasts
-        forecasts = data[['l_estimate', 'u_estimate']].to_numpy()
-
-        # raw errors and error rates; negative/lower, positive/higher
-        errors: np.ndarray =  forecasts - ground
-        data.loc[:, ['l_e_error', 'u_e_error']] = errors
-        data.loc[:, ['l_e_error_rate', 'u_e_error_rate']] = np.true_divide(errors, ground)
-
-        return data
 
     @staticmethod
     def __get_node(blob: pd.DataFrame) -> dict:
@@ -88,9 +66,6 @@ class Measures:
         :param specifications: An institution's identifiers.<br>
         :return:
         """
-
-        parts = parts._replace(estimates=self.__errors(data=parts.estimates.copy()),
-                       tests=self.__errors(data=parts.tests.copy()))
 
         nodes = {
             'estimates': self.__get_node(parts.estimates[self.__reference]),
