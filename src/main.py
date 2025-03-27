@@ -45,16 +45,15 @@ if __name__ == '__main__':
                         format='\n\n%(message)s\n%(asctime)s.%(msecs)03d\n\n',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
-
     # Classes
     import src.assets
     import src.data.interface
     import src.decompositions.interface
-    import src.functions.cache
+    import src.drift.interface
     import src.forecasts.interface
+    import src.functions.cache
     import src.preface.interface
     import src.transfer.interface
-    import src.drift.interface
 
     connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
 

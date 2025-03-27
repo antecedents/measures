@@ -1,12 +1,15 @@
 """Module parts.py"""
 import typing
+import os
 
 import numpy as np
 import pandas as pd
-import scipy.stats as sta
 
+import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.elements.text_attributes as txa
+import src.functions.streams
 
 
 class Parts:
@@ -20,28 +23,15 @@ class Parts:
         Constructor
         """
 
-        self.__span = 0.90
+        self.__configurations = config.Config()
+
+        # ...
+        self.__streams = src.functions.streams.Streams()
 
         # The fields in focus, and descriptive names
         self.__fields = ['milliseconds', 'week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
         self.__rename = {'seasonal_est': 'sc_estimate', 'mu': 'tc_estimate',
                          'std': 'tc_estimate_deviation'}
-
-    @staticmethod
-    def __metric(period: float, average: float, deviation: float, percentile: float) -> float:
-        """
-        period + average + (z-score * standard deviation)
-
-        :param period:  An institution's seasonal component estimates.
-        :param average: The averages of the samples of an institution's trend component estimates.
-        :param deviation: The standard deviations of the trend component estimates samples.
-        :param percentile: The percentile boundary of interest.
-        :return:
-        """
-
-        score = sta.norm.ppf(percentile)
-
-        return period + average + (score * deviation)
 
     def __get_parts(self, seasonal: sa.Seasonal, trend: pd.DataFrame) \
             -> typing.Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -61,34 +51,38 @@ class Parts:
                 tests[self.__fields].rename(columns=self.__rename),
                 futures[self.__fields].rename(columns=self.__rename))
 
-    def __add_boundaries(self, data: pd.DataFrame) -> pd.DataFrame:
-        """
-        
-        :param data: 
-        :return: 
+    def __append_features(self, estimates: pd.DataFrame, uri: str) -> pd.DataFrame:
         """
 
-        data['l_estimate'] = self.__metric(
-            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
-            percentile=0.5 - 0.5*self.__span)
-        data['u_estimate'] = self.__metric(
-            period = data['sc_estimate'], average=data['tc_estimate'], deviation=data['tc_estimate_deviation'],
-            percentile=0.5 + 0.5*self.__span)
+        :param estimates:
+        :param uri:
+        :return:
+        """
 
-        return data
+        fields = ['week_ending_date', 'trend', 'residue', 'seasonal']
 
-    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pr.Parts:
+        # Reading-in the features data
+        text = txa.TextAttributes(uri=uri, header=0)
+        features = self.__streams.read(text=text)
+        features['week_ending_date'] = pd.to_datetime(
+            features['week_ending_date'].astype(str), errors='coerce', format='%Y-%m-%d')
+
+        # Merging ...
+        return estimates.merge(features[fields], how='left', on='week_ending_date')
+
+    def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame, code: str) -> pr.Parts:
         """
 
         :param seasonal: The seasonal components estimations.
         :param trend: The trend components estimations.
+        :param code: The identification code of an institution/hospital.
         :return:
         """
 
         estimates, tests, futures = self.__get_parts(seasonal=seasonal, trend=trend)
 
-        estimates = self.__add_boundaries(data=estimates.copy())
-        tests = self.__add_boundaries(data=tests.copy())
-        futures = self.__add_boundaries(data=futures.copy())
+        # Extending estimates
+        uri = os.path.join(self.__configurations.data_, 'data', code, 'features.csv')
+        estimates = self.__append_features(estimates=estimates.copy(), uri=uri)
 
         return pr.Parts(estimates=estimates, tests=tests, futures=futures)

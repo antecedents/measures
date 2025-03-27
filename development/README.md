@@ -36,31 +36,33 @@ Subsequently, run an instance of the image `uncertainty` via:
 
 
 ```shell
-docker run --rm -i -t -p 8000:8000 -p 8888:8888 -w /app --mount
+docker run --rm -i -t -p 8000:8000 -w /app --mount
     type=bind,src="$(pwd)",target=/app uncertainty
 ```
 
 or
 
 ```shell
-docker run --rm -i -t -p 8000:8000 -p 8888:8888 -w /app --mount
+docker run --rm -i -t -p 8000:8000 -w /app --mount
     type=bind,src="$(pwd)",target=/app 
-    -v ~/.aws:/root/.aws uncertainty
+      -v ~/.aws:/root/.aws uncertainty
 ```
 
 <br>
 
-Herein, `-p 8000:8000` maps the host port `8000` to container port `8000`; the port `8888` ascertains access to [Jupyter Lab](https://docs.docker.com/guides/jupyter/).  Note, the container's working environment,
-i.e., `-w`, must be inline with this project's top directory.  Additionally,
+Herein, `-p 8000:8000` maps the host port `8000` to container port `8000`.  Note, the container's working environment,
+i.e., `-w`, must be inline with this project's top directory.  Additionally, visit the links for more about the flags/options $\rightarrow$
 
 * --rm: [automatically remove container](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the)
 * -i: [interact](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di)
 * -t: [tag](https://docs.docker.com/get-started/02_our_app/#:~:text=Finally%2C%20the-,%2Dt,-flag%20tags%20your)
 * -p: [publish the container's port/s to the host](https://docs.docker.com/engine/reference/commandline/run/#:~:text=%2D%2Dpublish%20%2C-,%2Dp,-Publish%20a%20container%E2%80%99s)
+* --mount type=bind: [a bind mount](https://docs.docker.com/engine/storage/bind-mounts/#syntax)
+* -v: [volume](https://docs.docker.com/engine/storage/volumes/)
 
 <br>
 
-Get the name of a running instance of ``uncertanty`` via:
+The part `-v ~/.aws:/root/.aws` ascertains Amazon Web Services interactions via containers. Get the name of a running instance of ``uncertanty`` via:
 
 ```shell
 docker ps --all

@@ -54,9 +54,9 @@ class Metrics:
         :return:
         """
 
-        er: np.ndarray = data[['l_e_error_rate', 'u_e_error_rate']].to_numpy()
+        er: np.ndarray = data[['l_e_ep', 'u_e_ep']].to_numpy()
         tiles: np.ndarray = np.percentile(a=er, q=[10, 25, 50, 75, 90], axis=0)
-        frame = pd.DataFrame(data=100*tiles, columns=['l_e_metrics', 'u_e_metrics'],
+        frame = pd.DataFrame(data=tiles, columns=['l_e_metrics', 'u_e_metrics'],
                              index=['l_whisker', 'l_quarter', 'median', 'u_quarter', 'u_whisker'])
 
         return frame
