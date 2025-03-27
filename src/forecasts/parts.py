@@ -59,11 +59,13 @@ class Parts:
         :return:
         """
 
-        fields = ['trend', 'residue', 'seasonal']
+        fields = ['week_ending_date', 'trend', 'residue', 'seasonal']
 
         # Reading-in the features data
         text = txa.TextAttributes(uri=uri, header=0)
         features = self.__streams.read(text=text)
+        features['week_ending_date'] = pd.to_datetime(
+            features['week_ending_date'].astype(str), errors='coerce', format='%Y-%m-%d')
 
         # Merging ...
         return estimates.merge(features[fields], how='left', on='week_ending_date')
