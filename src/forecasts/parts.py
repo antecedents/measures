@@ -4,8 +4,11 @@ import typing
 import numpy as np
 import pandas as pd
 
+import config
 import src.elements.parts as pr
 import src.elements.seasonal as sa
+import src.elements.text_attributes as txa
+import src.functions.streams
 
 
 class Parts:
@@ -18,6 +21,11 @@ class Parts:
         """
         Constructor
         """
+
+        self.__configurations = config.Config()
+
+        # ...
+        self.__streams = src.functions.streams.Streams()
 
         # The fields in focus, and descriptive names
         self.__fields = ['milliseconds', 'week_ending_date', 'n_attendances', 'seasonal_est', 'mu', 'std']
@@ -41,6 +49,16 @@ class Parts:
         return (estimates[self.__fields].rename(columns=self.__rename),
                 tests[self.__fields].rename(columns=self.__rename),
                 futures[self.__fields].rename(columns=self.__rename))
+
+    def __append_features(self, uri: str):
+        """
+
+        :param uri:
+        :return:
+        """
+
+        text = txa.TextAttributes(uri=uri, header=0)
+        self.__streams.read(text=text)
 
     def exc(self, seasonal: sa.Seasonal, trend: pd.DataFrame) -> pr.Parts:
         """
