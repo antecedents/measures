@@ -51,7 +51,7 @@ docker run --rm -i -t -p 8000:8000 -w /app --mount
 <br>
 
 Herein, `-p 8000:8000` maps the host port `8000` to container port `8000`.  Note, the container's working environment,
-i.e., `-w`, must be inline with this project's top directory.  Additionally, the flags/options mean
+i.e., `-w`, must be inline with this project's top directory.  Additionally, visit the links for more about the flags/options $\rightarrow$
 
 * --rm: [automatically remove container](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the)
 * -i: [interact](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di)
