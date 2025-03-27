@@ -1,3 +1,4 @@
+"""Module boundaries.py"""
 import pandas as pd
 
 import scipy.stats as sta
