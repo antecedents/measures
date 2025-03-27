@@ -1,5 +1,6 @@
 """Module boundaries.py"""
 import pandas as pd
+import numpy as np
 
 import scipy.stats as sta
 import src.elements.parts as pr
@@ -35,6 +36,41 @@ class Boundaries:
         score = sta.norm.ppf(percentile)
 
         return period + average + (score * deviation)
+
+    @staticmethod
+    def __e_series(data: pd.DataFrame) -> pd.DataFrame:
+        """
+
+        :param data: The forecasts w.r.t. training or testing phases.
+        :return:
+        """
+
+        # ground truth, forecasts
+        ground = data['n_attendances'].to_numpy()[:,None]
+        forecasts = data[['l_estimate', 'u_estimate']].to_numpy()
+
+        # raw errors and error rates; negative/lower, positive/higher
+        errors: np.ndarray =  forecasts - ground
+        data.loc[:, ['l_e_error', 'u_e_error']] = errors
+        data.loc[:, ['l_e_error_rate', 'u_e_error_rate']] = np.true_divide(errors, ground)
+
+        return data
+
+    @staticmethod
+    def __e_trend(data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Applies to the training data only.
+
+        :param data: The forecasts w.r.t. training or testing phases.
+        :return:
+        """
+
+        # ground truth, forecasts, error rates; negative/lower, positive/higher
+        ground = data['trend'].to_numpy()[:,None]
+        forecasts = data[['l_tc_estimate', 'u_tc_estimate']].to_numpy()
+        data.loc[:, ['l_tc_error_rate', 'u_tc_error_rate']] = np.true_divide(forecasts - ground, ground)
+
+        return data
 
     def __add_boundaries(self, data: pd.DataFrame) -> pd.DataFrame:
         """
