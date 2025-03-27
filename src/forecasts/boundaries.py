@@ -52,7 +52,7 @@ class Boundaries:
         # raw errors and error rates; negative/lower, positive/higher
         errors: np.ndarray =  forecasts - ground
         data.loc[:, ['l_e_error', 'u_e_error']] = errors
-        data.loc[:, ['l_e_error_rate', 'u_e_error_rate']] = np.true_divide(errors, ground)
+        data.loc[:, ['l_e_ep', 'u_e_ep']] = 100 * np.true_divide(errors, ground)
 
         return data
 
