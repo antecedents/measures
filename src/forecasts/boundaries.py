@@ -10,8 +10,7 @@ class Boundaries:
     <b>Notes</b><br>
     ------<br>
 
-    Estimations boundaries.
-
+    This class determines estimations boundaries vis-à-vis estimations samples.<br>
     """
 
     def __init__(self):
