@@ -1,8 +1,8 @@
 """Module boundaries.py"""
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 import scipy.stats as sta
+
 import src.elements.parts as pr
 
 
@@ -10,7 +10,6 @@ class Boundaries:
     """
     <b>Notes</b><br>
     ------<br>
-
     This class determines estimations boundaries vis-à-vis estimations samples.<br>
     """
 
@@ -40,6 +39,7 @@ class Boundaries:
     @staticmethod
     def __e_series(data: pd.DataFrame) -> pd.DataFrame:
         """
+        Estimates and tests, only.
 
         :param data: The forecasts w.r.t. training or testing phases.
         :return:
@@ -59,16 +59,16 @@ class Boundaries:
     @staticmethod
     def __e_trend(data: pd.DataFrame) -> pd.DataFrame:
         """
-        Applies to the training data only.
+        Estimates only.
 
         :param data: The forecasts w.r.t. training or testing phases.
         :return:
         """
 
-        # ground truth, forecasts, error rates; negative/lower, positive/higher
+        # ground truth, forecasts, error percentages; negative/lower, positive/higher
         ground = data['trend'].to_numpy()[:,None]
         forecasts = data[['l_tc_estimate', 'u_tc_estimate']].to_numpy()
-        data.loc[:, ['l_tc_error_rate', 'u_tc_error_rate']] = np.true_divide(forecasts - ground, ground)
+        data.loc[:, ['l_tc_ep', 'u_tc_ep']] = 100 * np.true_divide(forecasts - ground, ground)
 
         return data
 
@@ -101,6 +101,11 @@ class Boundaries:
         estimates = self.__add_boundaries(data=parts.estimates.copy())
         tests = self.__add_boundaries(data=parts.tests.copy())
         futures = self.__add_boundaries(data=parts.futures.copy())
+
+        estimates = self.__e_series(data=estimates.copy())
+        tests = self.__e_series(data=tests.copy())
+
+        estimates = self.__e_trend(data=estimates.copy())
 
         parts._replace(estimates=estimates, tests=tests, futures=futures)
 
