@@ -86,7 +86,7 @@ class Interface:
             specifications = self.__get__specifications(code=code)
             seasonal: sa.Seasonal = self.__seasonal(code=code)
             trend: pd.DataFrame = self.__trend(code=code)
-            parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend)
+            parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend, code=code)
             _parts: pr.Parts = boundaries(parts=parts)
             parts_: pr.Parts = measures(parts=_parts, specifications=specifications)
             message = metrics(parts=parts_, specifications=specifications)
