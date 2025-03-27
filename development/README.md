@@ -62,7 +62,7 @@ i.e., `-w`, must be inline with this project's top directory.  Additionally, vis
 
 <br>
 
-Get the name of a running instance of ``uncertanty`` via:
+The part `-v ~/.aws:/root/.aws` ascertains Amazon Web Services interactions via containers. Get the name of a running instance of ``uncertanty`` via:
 
 ```shell
 docker ps --all
