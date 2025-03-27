@@ -107,6 +107,6 @@ class Boundaries:
 
         estimates = self.__e_trend(data=estimates.copy())
 
-        parts._replace(estimates=estimates, tests=tests, futures=futures)
+        parts = parts._replace(estimates=estimates, tests=tests, futures=futures)
 
         return parts
