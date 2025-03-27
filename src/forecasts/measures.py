@@ -31,7 +31,7 @@ class Measures:
         # their true values are yet unknown.
         self.__f_estimates = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
                               'l_e_ep', 'u_e_ep', 'trend', 'l_tc_estimate', 'u_tc_estimate', 'l_tc_ep', 'u_tc_ep']
-        self.__f_tests = list(set(self.__f_estimates) - {'l_tc_ep', 'u_tc_ep'})
+        self.__f_tests = list(set(self.__f_estimates) - {'trend', 'l_tc_ep', 'u_tc_ep'})
         self.__f_futures = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_tc_estimate', 'u_tc_estimate']
 
     @staticmethod
