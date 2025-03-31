@@ -23,8 +23,6 @@ class Structuring:
         ).astype(np.longlong)
         decompositions.sort_values(by='week_ending_date', inplace=True)
 
-        decompositions.info()
-
         return decompositions
 
     def exc(self, blob: pd.DataFrame) -> pd.DataFrame:

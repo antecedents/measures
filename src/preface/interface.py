@@ -44,7 +44,7 @@ class Interface:
         :return:
         """
 
-        prefix = f'artefacts{config.Config().stamp}'
+        prefix = f'artefacts/{config.Config().stamp}'
 
         value = src.s3.keys.Keys(service=service, bucket_name=bucket_name).excerpt(prefix=prefix)
         logging.info('KEYS: %s', value)
