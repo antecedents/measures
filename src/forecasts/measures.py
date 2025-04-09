@@ -27,8 +27,7 @@ class Measures:
         # Instance for writing/reading JSON (JavaScript Object Notation) items.
         self.__objects = src.functions.objects.Objects()
 
-        # Graphing fields; minimal is for futures parts, which do not include error measures because
-        # their true values are yet unknown.
+        # Graphing fields.
         self.__f_estimates = ['milliseconds', 'n_attendances', 'l_estimate', 'u_estimate', 'l_e_error', 'u_e_error',
                               'l_e_ep', 'u_e_ep', 'trend', 'l_tc_estimate', 'u_tc_estimate', 'l_tc_ep', 'u_tc_ep']
         self.__f_tests = list(set(self.__f_estimates) - {'trend', 'l_tc_ep', 'u_tc_ep'})
