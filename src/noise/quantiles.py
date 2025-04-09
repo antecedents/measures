@@ -8,6 +8,7 @@ import pandas as pd
 
 import config
 import src.elements.specifications as se
+import src.elements.parts as pr
 import src.elements.text_attributes as txa
 import src.functions.objects
 import src.functions.streams
@@ -27,7 +28,8 @@ class Quantiles:
         self.__streams = src.functions.streams.Streams()
         self.__objects = src.functions.objects.Objects()
 
-        self.__terms = {0.1: 'l_whisker', 0.25: 'l_quartile', 0.5: 'median', 0.75: 'u_quartile', 0.9: 'u_whisker'}
+        self.__terms = {0.1: 'l_whisker', 0.25: 'l_quartile', 0.4: 'l_m_decile', 0.5: 'median',
+                        0.6: 'u_m_decile', 0.75: 'u_quartile', 0.9: 'u_whisker'}
 
     def __get_quantiles(self, blob: pd.DataFrame) -> pd.DataFrame:
         """
@@ -36,7 +38,7 @@ class Quantiles:
         :return:
         """
 
-        values: pd.Series = blob['residue'].quantile(q=np.array([0.1, 0.25, 0.5, 0.75, 0.9]))
+        values: pd.Series = blob['residue'].quantile(q=np.array([0.1, 0.25, 0.4, 0.5, 0.6, 0.75, 0.9]))
         board = values.to_frame()
         board['term'] = board.index.map(self.__terms)
 
@@ -62,17 +64,19 @@ class Quantiles:
 
         logging.info('Quantiles -> %s', message)
 
-    def exc(self, specifications: se.Specifications) -> pd.DataFrame:
+    def exc(self, parts: pr.Parts, specifications: se.Specifications) -> pd.DataFrame:
         """
 
+        :param parts:
         :param specifications: A set of institution/hospital attributes.
         :return:
         """
 
         # Reading-in the ...
-        uri = os.path.join(self.__configurations.data_, 'data', specifications.hospital_code, 'features.csv')
-        text = txa.TextAttributes(uri=uri, header=0, usecols=['residue'])
-        data = self.__streams.read(text=text)
+        # uri = os.path.join(self.__configurations.data_, 'data', specifications.hospital_code, 'features.csv')
+        # text = txa.TextAttributes(uri=uri, header=0, usecols=['residue'])
+        # data = self.__streams.read(text=text)
+        data = parts.estimates
 
         # The index values are the self.__terms values, and the frame has a single field -> residue
         quantiles = self.__get_quantiles(blob=data)
