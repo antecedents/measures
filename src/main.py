@@ -19,7 +19,7 @@ def main():
     src.assets.Assets(s3_parameters=s3_parameters).exc()
 
     # Reference
-    reference = src.data.interface.Interface(
+    reference, specifications_ = src.data.interface.Interface(
         s3_parameters=s3_parameters).exc()
 
     # Steps
