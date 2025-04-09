@@ -13,6 +13,8 @@ import src.forecasts.parts
 import src.forecasts.seasonal
 import src.forecasts.trend
 import src.functions.directories
+import src.noise.boundaries
+import src.noise.persist
 import src.noise.quantiles
 
 
@@ -51,7 +53,8 @@ class Interface:
 
     def exc(self, specifications_: list[se.Specifications]):
         """
-
+        
+        :param specifications_:
         :return:
         """
 
@@ -60,12 +63,20 @@ class Interface:
 
         # Delayed task
         __quantiles = dask.delayed(src.noise.quantiles.Quantiles().exc)
+        __boundaries = dask.delayed(src.noise.boundaries.Boundaries().exc)
+        __persist = dask.delayed(src.noise.persist.Persist().exc)
 
         # Hence
         computations = []
         for specifications in specifications_:
-
             seasonal: sa.Seasonal = self.__seasonal(code=specifications.hospital_code)
             trend: pd.DataFrame = self.__trend(code=specifications.hospital_code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend, code=specifications.hospital_code)
-            quantiles: pd.Series = __quantiles(code=specifications.hospital_code)
+            quantiles: pd.DataFrame = __quantiles(specifications=specifications)
+            parts_ = boundaries = __boundaries(parts=parts, quantiles=quantiles)
+            message = __persist(parts=parts_)
+            computations.append(message)
+
+        messages = dask.compute(computations, scheduler='threads')[0]
+
+        logging.info(messages)
