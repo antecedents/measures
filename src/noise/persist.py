@@ -34,7 +34,9 @@ class Persist:
         :return:
         """
 
-        string = data.to_json(orient='split')
+        # Each dataframe has a (a) milliseconds epoch, and (b) week ending date field.  If both are
+        # exported into a JSON file, the values of these fields will be the same -> milliseconds epoch
+        string = data.drop(columns='week_ending_date').to_json(orient='split')
 
         return json.loads(string)
 
