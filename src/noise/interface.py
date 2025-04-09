@@ -23,13 +23,10 @@ class Interface:
     Interface
     """
 
-    def __init__(self, reference: pd.DataFrame):
+    def __init__(self):
         """
-
-        :param reference:
+        Constructor
         """
-
-        self.__reference = reference
 
         # Configurations
         self.__configurations = config.Config()
