@@ -21,7 +21,7 @@ class Boundaries:
         self.__span = 0.90
 
     @staticmethod
-    def __get_metric(data: pd.DataFrame, percentile: float, median: float) -> float:
+    def __get_metric(data: pd.DataFrame, percentile: float, disturbance: float) -> float:
         """
         period + average + (z-score * standard deviation)
 
@@ -31,7 +31,7 @@ class Boundaries:
 
         :param data: The data
         :param percentile: The percentile boundary of interest.
-        :param median: The median of the residues; vis-à-vis trend + season + residues of a training series
+        :param disturbance:
         :return:
         """
 
@@ -41,7 +41,7 @@ class Boundaries:
         average = data['tc_estimate']
         deviation = data['tc_estimate_deviation']
 
-        return period + average + (score * deviation) + median
+        return period + average + (score * deviation) + disturbance
 
     @staticmethod
     def __get_error_values(frame: pd.DataFrame) -> pd.DataFrame:
@@ -62,15 +62,15 @@ class Boundaries:
 
         return frame
 
-    def __get_boundaries(self, data: pd.DataFrame, median: float) -> pd.DataFrame:
+    def __get_boundaries(self, data: pd.DataFrame, metrics: pd.Series) -> pd.DataFrame:
         """
 
         :param data:
         :return:
         """
 
-        data['l_estimate'] = self.__get_metric(data=data, percentile=0.5 - 0.5*self.__span, median=median)
-        data['u_estimate'] = self.__get_metric(data=data, percentile=0.5 + 0.5*self.__span, median=median)
+        data['l_estimate'] = self.__get_metric(data=data, percentile=0.5 - 0.5*self.__span, disturbance=metrics['l_m_decile'])
+        data['u_estimate'] = self.__get_metric(data=data, percentile=0.5 + 0.5*self.__span, disturbance=metrics['u_m_decile'])
 
         return data
 
@@ -82,11 +82,11 @@ class Boundaries:
         :return:
         """
 
-        median = float(quantiles['residue']['median'])
+        metrics = quantiles['residue']
 
-        estimates = self.__get_boundaries(data=parts.estimates.copy(), median=median)
-        tests = self.__get_boundaries(data=parts.tests.copy(), median=median)
-        futures = self.__get_boundaries(data=parts.futures.copy(), median=median)
+        estimates = self.__get_boundaries(data=parts.estimates.copy(), metrics=metrics)
+        tests = self.__get_boundaries(data=parts.tests.copy(), metrics=metrics)
+        futures = self.__get_boundaries(data=parts.futures.copy(), metrics=metrics)
 
         estimates = self.__get_error_values(frame=estimates.copy())
         tests = self.__get_error_values(frame=tests.copy())
