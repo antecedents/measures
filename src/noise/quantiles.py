@@ -1,21 +1,24 @@
-
+"""Module quantiles.py"""
+import json
 import logging
 import os
 
 import numpy as np
 import pandas as pd
-import json
 
 import config
-import src.elements.text_attributes as txa
 import src.elements.specifications as se
-import src.functions.streams
+import src.elements.text_attributes as txa
 import src.functions.objects
+import src.functions.streams
 
 
 class Quantiles:
 
     def __init__(self):
+        """
+        Constructor
+        """
 
         self.__configurations = config.Config()
         self.__path = os.path.join(self.__configurations.points_, 'quantiles')
@@ -27,6 +30,11 @@ class Quantiles:
         self.__terms = {0.1: 'l_whisker', 0.25: 'l_quartile', 0.5: 'median', 0.75: 'u_quartile', 0.9: 'u_whisker'}
 
     def __get_quantiles(self, blob: pd.DataFrame) -> pd.DataFrame:
+        """
+
+        :param blob: A dataframe that includes the residues after series decomposition
+        :return:
+        """
 
         values: pd.Series = blob['residue'].quantile(q=np.array([0.1, 0.25, 0.5, 0.75, 0.9]))
         board = values.to_frame()
@@ -37,18 +45,20 @@ class Quantiles:
 
         return board
 
-    def __persist(self, quantiles: pd.DataFrame, code: str):
+    def __persist(self, quantiles: pd.DataFrame, specifications: se.Specifications):
         """
 
-        :param quantiles:
-        :param code:
+        :param quantiles: The residues quantiles.
+        :param specifications: A set of institution/hospital attributes.
         :return:
         """
 
         nodes = json.loads(quantiles['residue'].to_json(orient='split'))
         nodes['categories'] = 'residue'
+        nodes.update(specifications._asdict())
 
-        message = self.__objects.write(nodes=nodes, path=os.path.join(self.__path, f'{code}.json'))
+        message = self.__objects.write(
+            nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
 
         logging.info('Quantiles -> %s', message)
 
@@ -69,7 +79,6 @@ class Quantiles:
         logging.info(quantiles)
 
         # Persist
-        self.__persist(quantiles=quantiles, code=specifications.hospital_code)
+        self.__persist(quantiles=quantiles, specifications=specifications)
 
         return quantiles
-
