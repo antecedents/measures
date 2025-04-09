@@ -73,7 +73,7 @@ class Interface:
             trend: pd.DataFrame = self.__trend(code=specifications.hospital_code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend, code=specifications.hospital_code)
             quantiles: pd.DataFrame = __quantiles(specifications=specifications)
-            parts_ = boundaries = __boundaries(parts=parts, quantiles=quantiles)
+            parts_ = __boundaries(parts=parts, quantiles=quantiles)
             message = __persist(parts=parts_)
             computations.append(message)
 
