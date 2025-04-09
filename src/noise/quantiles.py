@@ -7,11 +7,9 @@ import numpy as np
 import pandas as pd
 
 import config
-import src.elements.specifications as se
 import src.elements.parts as pr
-import src.elements.text_attributes as txa
+import src.elements.specifications as se
 import src.functions.objects
-import src.functions.streams
 
 
 class Quantiles:
@@ -25,7 +23,6 @@ class Quantiles:
         self.__path = os.path.join(self.__configurations.points_, 'quantiles')
 
         # Instances
-        self.__streams = src.functions.streams.Streams()
         self.__objects = src.functions.objects.Objects()
 
         self.__terms = {0.1: 'l_whisker', 0.25: 'l_quartile', 0.4: 'l_m_decile', 0.5: 'median',
@@ -42,7 +39,7 @@ class Quantiles:
         board = values.to_frame()
         board['term'] = board.index.map(self.__terms)
 
-        # Implicitly drop the index of quantile points [0.1, 0.25, 0.5, 0.75, 0.9]
+        # Implicitly drop the index of quantile points
         board.set_index(keys='term', inplace=True)
 
         return board
@@ -67,15 +64,11 @@ class Quantiles:
     def exc(self, parts: pr.Parts, specifications: se.Specifications) -> pd.DataFrame:
         """
 
-        :param parts:
+        :param parts: An object of dataframes, refer to src.elements.parts
         :param specifications: A set of institution/hospital attributes.
         :return:
         """
 
-        # Reading-in the ...
-        # uri = os.path.join(self.__configurations.data_, 'data', specifications.hospital_code, 'features.csv')
-        # text = txa.TextAttributes(uri=uri, header=0, usecols=['residue'])
-        # data = self.__streams.read(text=text)
         data = parts.estimates
 
         # The index values are the self.__terms values, and the frame has a single field -> residue
