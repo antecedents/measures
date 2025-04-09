@@ -27,7 +27,7 @@ class Persist:
         self.__path = os.path.join(self.__configurations.points_, 'adjusting')
 
     @staticmethod
-    def __dictionary(data: pd.DataFrame):
+    def __dictionary(data: pd.DataFrame) -> dict:
         """
 
         :param data: The dataframe that would be converted into a dict
