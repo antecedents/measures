@@ -53,8 +53,8 @@ class Interface:
 
     def exc(self, specifications_: list[se.Specifications]):
         """
-        
-        :param specifications_:
+
+        :param specifications_: A list of attributes per institution/hospital.
         :return:
         """
 
