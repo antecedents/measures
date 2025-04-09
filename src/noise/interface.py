@@ -69,9 +69,9 @@ class Interface:
             seasonal: sa.Seasonal = self.__seasonal(code=specifications.hospital_code)
             trend: pd.DataFrame = self.__trend(code=specifications.hospital_code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend, code=specifications.hospital_code)
-            quantiles: pd.DataFrame = __quantiles(specifications=specifications)
+            quantiles: pd.DataFrame = __quantiles(parts=parts, specifications=specifications)
             parts_ = __boundaries(parts=parts, quantiles=quantiles)
-            message = __persist(parts=parts_)
+            message = __persist(parts=parts_, specifications=specifications)
             computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
