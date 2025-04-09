@@ -1,7 +1,8 @@
 """Module interface.py"""
 
-import pandas as pd
 import typing
+
+import pandas as pd
 
 import src.data.codes
 import src.data.menu
