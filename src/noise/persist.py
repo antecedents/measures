@@ -11,22 +11,26 @@ import src.functions.objects
 
 
 class Persist:
+    """
+
+    """
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
         self.__objects = src.functions.objects.Objects()
 
+        # Storage path
         self.__path = os.path.join(self.__configurations.points_, 'adjusting')
 
     @staticmethod
     def __dictionary(data: pd.DataFrame):
         """
 
-        :param data:
+        :param data: The dataframe that would be converted into a dict
         :return:
         """
 
@@ -38,8 +42,8 @@ class Persist:
     def exc(self, parts: pr.Parts, specifications: se.Specifications) -> str:
         """
 
-        :param parts:
-        :param specifications:
+        :param parts: An object of dataframes, refer to src.elements.parts
+        :param specifications: A set of institution/hospital attributes.
         :return:
         """
 
