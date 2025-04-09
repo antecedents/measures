@@ -13,6 +13,9 @@ import src.functions.objects
 
 
 class Quantiles:
+    """
+    Quantiles of a residue series
+    """
 
     def __init__(self):
         """
