@@ -12,7 +12,7 @@ import src.functions.objects
 
 class Persist:
     """
-
+    Saves
     """
 
     def __init__(self):
