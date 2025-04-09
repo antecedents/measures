@@ -47,7 +47,7 @@ class Interface:
         :return:
         """
 
-        sections = ['decompositions', 'drift', 'errors', 'forecasts']
+        sections = ['decompositions', 'drift', 'errors', 'forecasts', 'adjusting', 'quantiles']
 
         frame = frame.assign(
             metadata = frame['section'].apply(

@@ -19,13 +19,14 @@ def main():
     src.assets.Assets(s3_parameters=s3_parameters).exc()
 
     # Reference
-    reference = src.data.interface.Interface(
+    reference, specifications_ = src.data.interface.Interface(
         s3_parameters=s3_parameters).exc()
 
     # Steps
     src.decompositions.interface.Interface(reference=reference).exc()
     src.forecasts.interface.Interface(reference=reference).exc()
     src.drift.interface.Interface(reference=reference, arguments=arguments).exc()
+    src.noise.interface.Interface().exc(specifications_=specifications_)
 
     src.transfer.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters).exc()
@@ -52,6 +53,7 @@ if __name__ == '__main__':
     import src.drift.interface
     import src.forecasts.interface
     import src.functions.cache
+    import src.noise.interface
     import src.preface.interface
     import src.transfer.interface
 

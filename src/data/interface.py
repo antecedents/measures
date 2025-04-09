@@ -1,11 +1,15 @@
 """Module interface.py"""
 
+import typing
+
 import pandas as pd
 
 import src.data.codes
 import src.data.menu
 import src.data.reference
+import src.data.specifications
 import src.elements.s3_parameters as s3p
+import src.elements.specifications as se
 
 
 class Interface:
@@ -26,7 +30,7 @@ class Interface:
 
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
 
-    def exc(self) -> pd.DataFrame:
+    def exc(self) -> typing.Tuple[pd.DataFrame, list[se.Specifications]]:
         """
 
         :return:
@@ -37,4 +41,6 @@ class Interface:
             s3_parameters=self.__s3_parameters).exc(codes=codes)
         src.data.menu.Menu().exc(reference=reference)
 
-        return reference
+        specifications_ = src.data.specifications.Specifications().exc(reference=reference)
+
+        return reference, specifications_
