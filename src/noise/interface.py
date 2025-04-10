@@ -13,9 +13,9 @@ import src.forecasts.parts
 import src.forecasts.seasonal
 import src.forecasts.trend
 import src.functions.directories
-import src.noise.boundaries
 import src.noise.persist
 import src.noise.quantiles
+import src.noise.metrics
 
 
 class Interface:
@@ -60,7 +60,7 @@ class Interface:
 
         # Delayed task
         __quantiles = dask.delayed(src.noise.quantiles.Quantiles().exc)
-        __boundaries = dask.delayed(src.noise.boundaries.Boundaries().exc)
+        __metrics = dask.delayed(src.noise.metrics.Metrics().exc)
         __persist = dask.delayed(src.noise.persist.Persist().exc)
 
         # Hence
@@ -70,8 +70,8 @@ class Interface:
             trend: pd.DataFrame = self.__trend(code=specifications.hospital_code)
             parts: pr.Parts = self.__parts(seasonal=seasonal, trend=trend, code=specifications.hospital_code)
             quantiles: pd.DataFrame = __quantiles(parts=parts, specifications=specifications)
-            parts_ = __boundaries(parts=parts, quantiles=quantiles)
-            message = __persist(parts=parts_, specifications=specifications)
+            parts_ = __metrics(parts=parts)
+            message = __persist(parts=parts_, quantiles=quantiles, specifications=specifications)
             computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
