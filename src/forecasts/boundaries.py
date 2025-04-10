@@ -68,6 +68,7 @@ class Boundaries:
         # ground truth, forecasts, error percentages; negative/lower, positive/higher
         ground = data['trend'].to_numpy()[:,None]
         forecasts = data[['l_tc_estimate', 'u_tc_estimate']].to_numpy()
+        data.loc[:, ['l_tc_error', 'u_tc_error']] = forecasts - ground
         data.loc[:, ['l_tc_ep', 'u_tc_ep']] = 100 * np.true_divide(forecasts - ground, ground)
 
         return data
@@ -101,9 +102,6 @@ class Boundaries:
         estimates = self.__add_boundaries(data=parts.estimates.copy())
         tests = self.__add_boundaries(data=parts.tests.copy())
         futures = self.__add_boundaries(data=parts.futures.copy())
-
-        estimates = self.__e_series(data=estimates.copy())
-        tests = self.__e_series(data=tests.copy())
 
         estimates = self.__e_trend(data=estimates.copy())
 
