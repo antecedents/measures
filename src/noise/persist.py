@@ -41,10 +41,11 @@ class Persist:
         return json.loads(string)
 
 
-    def exc(self, parts: pr.Parts, specifications: se.Specifications) -> str:
+    def exc(self, parts: pr.Parts, quantiles: pd.DataFrame, specifications: se.Specifications) -> str:
         """
 
         :param parts: An object of dataframes, refer to src.elements.parts
+        :param quantiles: Quantiles of a residue series
         :param specifications: A set of institution/hospital attributes.
         :return:
         """
@@ -54,6 +55,7 @@ class Persist:
             'tests': self.__dictionary(data=parts.tests),
             'futures': self.__dictionary(data=parts.futures)}
         nodes.update(specifications._asdict())
+        nodes.update(quantiles.to_dict()['residue'])
 
         message: str = self.__objects.write(
             nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))

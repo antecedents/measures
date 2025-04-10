@@ -37,26 +37,6 @@ class Boundaries:
         return period + average + (score * deviation)
 
     @staticmethod
-    def __e_series(data: pd.DataFrame) -> pd.DataFrame:
-        """
-        Estimates and tests, only.
-
-        :param data: The forecasts w.r.t. training or testing phases.
-        :return:
-        """
-
-        # ground truth, forecasts
-        ground = data['n_attendances'].to_numpy()[:,None]
-        forecasts = data[['l_estimate', 'u_estimate']].to_numpy()
-
-        # raw errors and error rates; negative/lower, positive/higher
-        errors: np.ndarray =  forecasts - ground
-        data.loc[:, ['l_e_error', 'u_e_error']] = errors
-        data.loc[:, ['l_e_ep', 'u_e_ep']] = 100 * np.true_divide(errors, ground)
-
-        return data
-
-    @staticmethod
     def __e_trend(data: pd.DataFrame) -> pd.DataFrame:
         """
         Estimates only.
@@ -68,6 +48,7 @@ class Boundaries:
         # ground truth, forecasts, error percentages; negative/lower, positive/higher
         ground = data['trend'].to_numpy()[:,None]
         forecasts = data[['l_tc_estimate', 'u_tc_estimate']].to_numpy()
+        data.loc[:, ['l_tc_error', 'u_tc_error']] = forecasts - ground
         data.loc[:, ['l_tc_ep', 'u_tc_ep']] = 100 * np.true_divide(forecasts - ground, ground)
 
         return data
@@ -101,9 +82,6 @@ class Boundaries:
         estimates = self.__add_boundaries(data=parts.estimates.copy())
         tests = self.__add_boundaries(data=parts.tests.copy())
         futures = self.__add_boundaries(data=parts.futures.copy())
-
-        estimates = self.__e_series(data=estimates.copy())
-        tests = self.__e_series(data=tests.copy())
 
         estimates = self.__e_trend(data=estimates.copy())
 
