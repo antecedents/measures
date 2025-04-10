@@ -37,26 +37,6 @@ class Boundaries:
         return period + average + (score * deviation)
 
     @staticmethod
-    def __e_series(data: pd.DataFrame) -> pd.DataFrame:
-        """
-        Estimates and tests, only.
-
-        :param data: The forecasts w.r.t. training or testing phases.
-        :return:
-        """
-
-        # ground truth, forecasts
-        ground = data['n_attendances'].to_numpy()[:,None]
-        forecasts = data[['l_estimate', 'u_estimate']].to_numpy()
-
-        # raw errors and error rates; negative/lower, positive/higher
-        errors: np.ndarray =  forecasts - ground
-        data.loc[:, ['l_e_error', 'u_e_error']] = errors
-        data.loc[:, ['l_e_ep', 'u_e_ep']] = 100 * np.true_divide(errors, ground)
-
-        return data
-
-    @staticmethod
     def __e_trend(data: pd.DataFrame) -> pd.DataFrame:
         """
         Estimates only.
