@@ -16,12 +16,10 @@ def main():
     logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
     # Data
-    data, specifications_ = src.data.interface.Interface(
-        s3_parameters=s3_parameters, arguments=arguments).exc()
+    data, specifications_ = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
     # Each institution's series
-    messages = src.algorithms.interface.Interface(
-        data=data, arguments=arguments).exc(specifications_=specifications_)
+    messages = src.algorithms.interface.Interface(data=data).exc(specifications_=specifications_)
     logger.info(messages)
 
     # Transfer
@@ -50,6 +48,6 @@ if __name__ == '__main__':
     import src.preface.interface
     import src.transfer.interface
 
-    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service = src.preface.interface.Interface().exc()
 
     main()
