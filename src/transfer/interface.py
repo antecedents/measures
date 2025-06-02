@@ -1,23 +1,21 @@
 """Module interface.py"""
 import logging
-import os
 
 import boto3
 import pandas as pd
 
+import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.ingress
+import src.transfer.cloud
 import src.transfer.dictionary
 import src.transfer.metadata
 
 
 class Interface:
     """
-    Notes<br>
-    ------<br>
-
-    This class executes the data transfer step; transfer to Amazon S3 (Simple Storage Service).
+    Class Interface
     """
 
     def __init__(self, connector: boto3.session.Session, service: sr.Service,  s3_parameters: s3p):
@@ -32,11 +30,10 @@ class Interface:
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
 
         # Metadata
-        metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__metadata_p = metadata.exc(name='points.json')
-        self.__metadata_m = metadata.exc(name='menu.json')
+        self.__metadata = src.transfer.metadata.Metadata(connector=connector)
 
         # Instances
+        self.__configurations = config.Config()
         self.__dictionary = src.transfer.dictionary.Dictionary()
 
     def __get_metadata(self, frame: pd.DataFrame) -> pd.DataFrame:
@@ -45,12 +42,12 @@ class Interface:
         :param frame:
         :return:
         """
-
-        sections = ['decompositions', 'drift', 'errors', 'forecasts', 'adjusting', 'quantiles']
+        __points = self.__metadata.exc(name='points.json')
+        __menu = self.__metadata.exc(name='menu.json')
 
         frame = frame.assign(
             metadata = frame['section'].apply(
-                lambda x: self.__metadata_p if x in sections else self.__metadata_m))
+                lambda x: __points if x == 'points' else __menu))
 
         return frame
 
@@ -62,13 +59,16 @@ class Interface:
 
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings = self.__dictionary.exc(
-            path=os.path.join(os.getcwd(), 'warehouse'), extension='json', prefix='warehouse/')
+            path=self.__configurations.measures_,
+            extension='json', prefix=self.__configurations.prefix + '/')
 
         # Adding metadata details per instance
         strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
-
+        # Prepare the S3 (Simple Storage Service) section
+        src.transfer.cloud.Cloud(
+            service=self.__service, s3_parameters=self.__s3_parameters).exc()
 
         # Transfer
         messages = src.s3.ingress.Ingress(
