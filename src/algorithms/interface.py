@@ -10,15 +10,13 @@ class Interface:
     The interface to the seasonal & trend component modelling steps.
     """
 
-    def __init__(self, data: pd.DataFrame, arguments: dict):
+    def __init__(self, data: pd.DataFrame):
         """
 
         :param data: The weekly accidents & emergency data of institutions/hospitals
-        :param arguments: A set of model development, and supplementary, arguments.
         """
 
         self.__data = data
-        self.__arguments = arguments
 
     def exc(self, specifications_: list[se.Specifications]) -> list[str]:
         """
@@ -30,6 +28,6 @@ class Interface:
 
         # ...
         messages = src.algorithms.initial.Initial(
-            data=self.__data, specifications_=specifications_, arguments=self.__arguments).exc()
+            data=self.__data, specifications_=specifications_).exc()
 
         return messages
