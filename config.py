@@ -1,8 +1,8 @@
 """
 Module config.py
 """
-import datetime
 import logging
+import datetime
 import os
 
 
@@ -34,13 +34,38 @@ class Config:
         self.stamp: str = tuesday.strftime('%Y-%m-%d')
         logging.info(self.stamp)
 
-        # Directories
-        self.data_ = os.path.join(os.getcwd(), 'data')
-        self.warehouse = os.path.join(os.getcwd(), 'warehouse')
 
-        self.points_ = os.path.join(self.warehouse, 'points')
-        self.menu_ = os.path.join(self.warehouse, 'menu')
+        '''
+        The prefix.ending.string & key.name of the modelling data; ref.
+            s3:// {bucket} / {prefix.starting.string} / {prefix.ending.string} / {key.name}
+        '''
+        self.source = f'modelling/{self.stamp}.csv'
 
-        # Configuration files
+
+        '''
+        Keys
+        '''
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.metadata_ = 'external/metadata'
+        self.arguments_key = 'measures/arguments.json'
+        self.metadata_ = 'measures/external'
+
+
+        '''
+        The prefix of the Amazon repository where the measures will be stored
+        '''
+        self.prefix = 'warehouse/measures'
+
+
+        '''
+        Local Paths
+        '''
+        self.warehouse: str = os.path.join(os.getcwd(), 'warehouse')
+        self.measures_ = os.path.join(self.warehouse, 'measures')
+        self.points_ = os.path.join(self.measures_, 'points')
+        self.menu_ = os.path.join(self.measures_, 'menu')
+
+
+        '''
+        Extra
+        '''
+        self.fields = ['week_ending_date', 'health_board_code', 'hospital_code', 'n_attendances']
