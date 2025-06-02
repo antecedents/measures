@@ -10,7 +10,7 @@ import src.functions.directories
 
 class Initial:
     """
-    Seasonal component modelling.
+    Build's each institution's series
     """
 
     def __init__(self, data: pd.DataFrame, specifications_: list[se.Specifications], arguments: dict):
