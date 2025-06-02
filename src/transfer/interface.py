@@ -10,7 +10,6 @@ import src.elements.service as sr
 import src.s3.ingress
 import src.transfer.dictionary
 import src.transfer.metadata
-import src.transfer.initial
 
 
 class Interface:
@@ -69,9 +68,7 @@ class Interface:
         strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
-        # Prepare the S3 (Simple Storage Service) section
-        src.transfer.initial.Initial(
-            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+
 
         # Transfer
         messages = src.s3.ingress.Ingress(
