@@ -15,15 +15,16 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
-    # Assets
-    src.assets.Assets(s3_parameters=s3_parameters).exc()
+    # Data
+    data, specifications_ = src.data.interface.Interface(
+        s3_parameters=s3_parameters, arguments=arguments).exc()
 
-    # Reference
-    reference, specifications_ = src.data.interface.Interface(
-        s3_parameters=s3_parameters).exc()
-    logger.info(reference)
-    logger.info(specifications_)
+    # Each institution's series
+    messages = src.algorithms.interface.Interface(
+        data=data, arguments=arguments).exc(specifications_=specifications_)
+    logger.info(messages)
 
+    # Transfer
     src.transfer.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters).exc()
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S')
 
     # Classes
-    import src.assets
+    import src.algorithms.interface
     import src.data.interface
     import src.functions.cache
     import src.preface.interface
