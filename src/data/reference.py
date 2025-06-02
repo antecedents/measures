@@ -24,37 +24,39 @@ class Reference:
         # An instance for reading & writing CSV (comma-separated values) data
         self.__stream = src.functions.streams.Streams()
 
-    def __boards(self):
+    def __get_boards(self):
         """
 
         :return:
         """
 
         uri = self.__endpoint + 'boards.csv'
-        text = txa.TextAttributes(uri=uri, header=0, usecols=['health_board_code', 'health_board_name'])
+        usecols = ['health_board_code', 'health_board_name']
+
+        text = txa.TextAttributes(uri=uri, header=0, usecols=usecols)
 
         return self.__stream.read(text=text)
 
-    def __institutions(self):
+    def __get_institutions(self):
         """
 
         :return:
         """
 
         uri = self.__endpoint + 'institutions.csv'
-        text = txa.TextAttributes(uri=uri, header=0, usecols=['health_board_code', 'hospital_code', 'hospital_name'])
+        usecols = ['hospital_code',	'hospital_name', 'post_code', 'health_board_code', 'hscp_code',
+                   'council_area', 'intermediate_zone',	'data_zone']
+        text = txa.TextAttributes(uri=uri, header=0, usecols=usecols)
 
         return self.__stream.read(text=text)
 
-    def exc(self, codes: list[str]) -> pd.DataFrame:
+    def exc(self, identifiers: list[str]) -> pd.DataFrame:
         """
 
-        :param codes:
+        :param identifiers:  A list of hospital identification codes
         :return:
         """
 
-        boards = self.__boards()
-        institutions = self.__institutions()
-        reference = institutions.merge(boards, on='health_board_code', how='left')
+        reference = self.__get_institutions().merge(self.__get_boards(), how='left', on='health_board_code')
 
-        return reference.loc[reference['hospital_code'].isin(codes), :]
+        return reference.loc[reference['hospital_code'].isin(identifiers), :]

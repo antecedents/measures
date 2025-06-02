@@ -1,5 +1,5 @@
-# Pytorch
-FROM python:3.12.8-bookworm
+# Base Image
+FROM python:3.12.10-bookworm
 
 
 # Temporary
@@ -10,7 +10,7 @@ ARG UID=$GID
 # If the steps of a `Dockerfile` use files that are different from the `context` file, COPY the
 # file of each step separately; and RUN the file immediately after COPY
 WORKDIR /app
-COPY /.devcontainer/requirements.txt /app
+COPY .devcontainer/requirements.txt /app
 
 
 # Environment
@@ -26,8 +26,8 @@ RUN groupadd --system automata --gid $GID && \
     unzip /tmp/awscliv2.zip -d /tmp/ && cd /tmp && sudo ./aws/install && cd ~ && \
     pip install --upgrade pip && \
     pip install --requirement /app/requirements.txt --no-cache-dir && \
-    mkdir /app/warehouse && mkdir /app/data && \
-    chown -R automaton:automata /app/warehouse && chown -R automaton:automata /app/data
+    mkdir /app/warehouse && \
+    chown -R automaton:automata /app/warehouse
 
 
 # Specific COPY
@@ -36,11 +36,11 @@ COPY config.py /app/config.py
 
 
 # Port
-EXPOSE 8000
+EXPOSE 8050
 
 
 # Create mountpoint
-VOLUME /app/warehouse /app/data
+VOLUME /app/warehouse
 
 
 # automaton

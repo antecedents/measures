@@ -32,8 +32,7 @@ class Dictionary:
 
         details: list[dict] = [
             {'file': file,
-             'vertex': file.rsplit(splitter, maxsplit=1)[1],
-             'section': os.path.basename(os.path.dirname(file))}
+             'vertex': file.rsplit(splitter, maxsplit=1)[1]}
             for file in files]
 
         return pd.DataFrame.from_records(details)
@@ -51,5 +50,6 @@ class Dictionary:
 
         # Building the Amazon S3 strings
         frame = local.assign(key=prefix + local["vertex"])
+        frame.loc[:, 'section'] = local['vertex'].str.split(pat=os.sep, n=1, expand=True)[0]
 
         return frame[['file', 'key', 'section']]

@@ -1,42 +1,53 @@
-"""Module setup.py"""
+"""
+Module setup.py
+"""
 import sys
 
 import config
-import src.functions.cache
+import src.elements.s3_parameters as s3p
+import src.elements.service as sr
 import src.functions.directories
 import src.s3.bucket
-import src.s3.keys
-import src.s3.prefix
 
 
 class Setup:
     """
-    Description
-    -----------
 
-    Sets up local & cloud environments
+    Notes
+    -----
+
+    This class prepares the Amazon S3 (Simple Storage Service) and local data environments.
     """
 
-    def __init__(self):
-        """
-        Constructor
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
         """
 
-        # Configurations, etc.
+        :param service: A suite of services for interacting with Amazon Web Services.
+        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
+                              name, buckets, etc.
+        """
+
+        self.__service: sr.Service = service
+        self.__s3_parameters: s3p.S3Parameters = s3_parameters
+
+        # Configurations
         self.__configurations = config.Config()
 
-        # Instances
-        self.__directories = src.functions.directories.Directories()
-
-    def __data(self) -> bool:
+    def __s3(self) -> bool:
         """
+        Prepares an Amazon S3 (Simple Storage Service) bucket.
 
         :return:
         """
 
-        self.__directories.cleanup(path=self.__configurations.data_)
+        # An instance for interacting with Amazon S3 buckets.
+        bucket = src.s3.bucket.Bucket(service=self.__service, location_constraint=self.__s3_parameters.location_constraint,
+                                      bucket_name=self.__s3_parameters.external)
 
-        return self.__directories.create(path=self.__configurations.data_)
+        if bucket.exists():
+            return True
+
+        return bucket.create()
 
     def __local(self) -> bool:
         """
@@ -44,11 +55,11 @@ class Setup:
         :return:
         """
 
-        self.__directories.cleanup(path=self.__configurations.warehouse)
+        # An instance for interacting with local directories
+        directories = src.functions.directories.Directories()
+        directories.cleanup(path=self.__configurations.warehouse)
 
-        states = []
-        for path in [self.__configurations.points_, self.__configurations.menu_]:
-            states.append(self.__directories.create(path=path))
+        states = [directories.create(p) for p in [self.__configurations.menu_, self.__configurations.points_]]
 
         return all(states)
 
@@ -58,8 +69,7 @@ class Setup:
         :return:
         """
 
-        if self.__local() & self.__data():
+        if self.__s3() & self.__local():
             return True
 
-        src.functions.cache.Cache().exc()
-        sys.exit('Set up failure (setup.py)')
+        sys.exit('Error: Set up failure.')

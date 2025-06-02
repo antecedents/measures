@@ -14,8 +14,8 @@ class Persist:
     """
     Notes<br>
     ------<br>
-    
-    Saves an institution's attendance series decompositions in a stocks graphs format.
+
+    Saves an institution's attendance series data in a stocks graphs format.
     """
 
     def __init__(self):
@@ -26,11 +26,10 @@ class Persist:
         self.__configurations = config.Config()
         self.__objects = src.functions.objects.Objects()
 
-        self.__path = os.path.join(self.__configurations.points_, 'decompositions')
-        src.functions.directories.Directories().create(self.__path)
+        src.functions.directories.Directories().create(self.__configurations.points_)
 
         # Fields in focus
-        self.__fields = ['milliseconds', 'n_attendances', 'trend', 'seasonal', 'residue']
+        self.__fields = ['milliseconds', 'n_attendances']
 
     def __get_nodes(self, blob: pd.DataFrame) -> dict:
         """
@@ -48,19 +47,16 @@ class Persist:
     def exc(self, data: pd.DataFrame, specifications: se.Specifications) -> str:
         """
 
-        :param data: The decomposition data.
+        :param data: The data of an institution.
         :param specifications: health_board_code -> A board's unique identification code. | hospital_code -> An
                                institution's unique identification code. | etc.
         :return:
         """
 
         nodes: dict = self.__get_nodes(blob=data)
-        nodes['health_board_code'] = specifications.health_board_code
-        nodes['health_board_name'] = specifications.health_board_name
-        nodes['hospital_code'] = specifications.hospital_code
-        nodes['hospital_name'] = specifications.hospital_name
+        nodes['attributes'] = specifications._asdict()
 
         message = self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__path, f'{specifications.hospital_code}.json'))
+            nodes=nodes, path=os.path.join(self.__configurations.points_, f'{specifications.hospital_code}.json'))
 
         return message

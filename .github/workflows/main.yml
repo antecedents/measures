@@ -1,4 +1,4 @@
-name: 'Accident & Emergency: Numerics'
+name: 'Accident & Emergency: Measures'
 
 on: [push]
 
@@ -45,14 +45,11 @@ jobs:
           echo "Issues in relation to logic (F7), syntax (Python E9, Flake F7), mathematical
           formulae symbols (F63), undefined variable names (F82):"
           
+          printf "\n src/algorithms "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/algorithms
+          
           printf "\n src/data "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/data
-          
-          printf "\n src/decompositions "
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/decompositions
-          
-          printf "\n src/drift "
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/drift
           
           printf "\n src/elements "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/elements
@@ -60,25 +57,25 @@ jobs:
           printf "\n src/functions "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/functions
           
-          printf "\n src/forecasts "
-          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/forecasts
+          printf "\n src/preface "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/preface
           
           printf "\n src/s3 "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/s3
+          
+          printf "\n src/transfer "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/transfer
           
           
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           printf "\n\n"
           echo "Complexity issues:"
           
+          printf "\n src/algorithms "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/algorithms
+          
           printf "\n src/data "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/data
-          
-          printf "\n src/decompositions "
-          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/decompositions
-          
-          printf "\n src/drift "
-          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/drift
           
           printf "\n src/elements "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/elements
@@ -86,11 +83,14 @@ jobs:
           printf "\n src/functions "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/functions
           
-          printf "\n src/forecasts "
-          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/forecasts
+          printf "\n src/preface "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/preface
           
           printf "\n src/s3 "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/s3
+          
+          printf "\n src/transfer "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/transfer
 
 
       - name: Lint with pylint
@@ -99,14 +99,11 @@ jobs:
           echo "============================= pylint session starts =============================="
           
           
+          printf "\n Package src/algorithms"
+          pylint --rcfile .pylintrc src/algorithms
+          
           printf "\n Package src/data"
           pylint --rcfile .pylintrc src/data
-          
-          printf "\n Package src/decompositions"
-          pylint --rcfile .pylintrc src/decompositions
-          
-          printf "\n Package src/drift"
-          pylint --rcfile .pylintrc src/drift
           
           printf "\n Package src/elements"
           pylint --rcfile .pylintrc src/elements
@@ -114,11 +111,14 @@ jobs:
           printf "\n Package src/functions"
           pylint --rcfile .pylintrc src/functions
           
-          printf "\n Package src/forecasts"
-          pylint --rcfile .pylintrc src/forecasts
+          printf "\n Package src/preface"
+          pylint --rcfile .pylintrc src/preface
           
           printf "\n Package src/s3"
           pylint --rcfile .pylintrc src/s3
+          
+          printf "\n Package src/transfer"
+          pylint --rcfile .pylintrc src/transfer
 
 
       - name: Test with pytest

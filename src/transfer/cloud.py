@@ -9,8 +9,10 @@ import src.s3.bucket
 import src.s3.keys
 import src.s3.prefix
 
+import config
 
-class Initial:
+
+class Cloud:
     """
     Description
     -----------
@@ -31,7 +33,7 @@ class Initial:
         self.__bucket_name = self.__s3_parameters.external
 
         # Configurations, etc.
-        self.__prefix = 'warehouse'
+        self.__configurations = config.Config()
 
     def __clear_prefix(self) -> bool:
         """
@@ -43,7 +45,7 @@ class Initial:
         instance = src.s3.prefix.Prefix(service=self.__service, bucket_name=self.__bucket_name)
 
         # Get the keys therein
-        keys: list[str] = instance.objects(prefix=self.__prefix)
+        keys: list[str] = instance.objects(prefix=self.__configurations.prefix)
 
         if len(keys) > 0:
             objects = [{'Key' : key} for key in keys]

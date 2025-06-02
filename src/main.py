@@ -15,19 +15,14 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info(datetime.datetime.now().strftime('%A %d %b %Y, %H:%M:%S.%f'))
 
-    # Assets
-    src.assets.Assets(s3_parameters=s3_parameters).exc()
+    # Data
+    data, specifications_ = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
-    # Reference
-    reference, specifications_ = src.data.interface.Interface(
-        s3_parameters=s3_parameters).exc()
+    # Each institution's series
+    messages = src.algorithms.interface.Interface(data=data).exc(specifications_=specifications_)
+    logger.info(messages)
 
-    # Steps
-    src.decompositions.interface.Interface(reference=reference).exc()
-    src.forecasts.interface.Interface(reference=reference).exc()
-    src.drift.interface.Interface(reference=reference, arguments=arguments).exc()
-    src.noise.interface.Interface().exc(specifications_=specifications_)
-
+    # Transfer
     src.transfer.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters).exc()
 
@@ -47,16 +42,12 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S')
 
     # Classes
-    import src.assets
+    import src.algorithms.interface
     import src.data.interface
-    import src.decompositions.interface
-    import src.drift.interface
-    import src.forecasts.interface
     import src.functions.cache
-    import src.noise.interface
     import src.preface.interface
     import src.transfer.interface
 
-    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service = src.preface.interface.Interface().exc()
 
     main()
