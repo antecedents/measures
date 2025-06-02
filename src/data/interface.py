@@ -1,5 +1,4 @@
 """Module interface.py"""
-import datetime
 import typing
 
 import pandas as pd
