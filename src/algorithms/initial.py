@@ -13,17 +13,15 @@ class Initial:
     Build's each institution's series
     """
 
-    def __init__(self, data: pd.DataFrame, specifications_: list[se.Specifications], arguments: dict):
+    def __init__(self, data: pd.DataFrame, specifications_: list[se.Specifications]):
         """
 
         :param data: The weekly accidents & emergency data of institutions/hospitals
         :param specifications_: The unique set of health board & institution pairings.
-        :param arguments: A set of model development, and supplementary, arguments.
         """
 
         self.__data = data
         self.__specifications_ = specifications_
-        self.__arguments = arguments
 
     @dask.delayed
     def __get_data(self, specifications: se.Specifications) -> pd.DataFrame:
